@@ -13,7 +13,7 @@ ng build --base-href "https://mdivjak.github.io/master/"
 Deploying to GitHub pages
 
 ```
-npx angular-cli-ghpages --dir=dist/master
+npx angular-cli-ghpages --dir=dist/master/browser
 ```
 
 ## Development server
