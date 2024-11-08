@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "ng build --base-href \"https://mdivjak.github.io/master/\" && npx angular-cli-ghpages --dir=dist/master/browser"
   },
   "private": true,
   "dependencies": {
