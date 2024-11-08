@@ -1,7 +1,7 @@
 <div class="flex min-h-screen items-center justify-center bg-gray-100">
   <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
     <h2 class="text-2xl font-bold text-center text-gray-800">Create an Account</h2>
-    <form (ngSubmit)="onRegister()" class="mt-6 space-y-6">
+    <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)">
       <!-- Email Field -->
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
@@ -13,9 +13,49 @@
           placeholder="Enter your email"
           class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required
+          #emailInput="ngModel"
         />
+        <div *ngIf="emailInput.invalid && emailInput.touched" class="text-red-500 text-sm">
+          Email is required.
+        </div>
       </div>
-
+    
+      <!-- First Name Field -->
+      <div>
+        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          [(ngModel)]="firstName"
+          name="firstName"
+          placeholder="Enter your first name"
+          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          required
+          #firstNameInput="ngModel"
+        />
+        <div *ngIf="firstNameInput.invalid && firstNameInput.touched" class="text-red-500 text-sm">
+          First name is required.
+        </div>
+      </div>
+    
+      <!-- Last Name Field -->
+      <div>
+        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          [(ngModel)]="lastName"
+          name="lastName"
+          placeholder="Enter your last name"
+          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          required
+          #lastNameInput="ngModel"
+        />
+        <div *ngIf="lastNameInput.invalid && lastNameInput.touched" class="text-red-500 text-sm">
+          Last name is required.
+        </div>
+      </div>
+    
       <!-- Password Field -->
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
@@ -27,9 +67,13 @@
           placeholder="Enter your password"
           class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required
+          #passwordInput="ngModel"
         />
+        <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-red-500 text-sm">
+          Password is required.
+        </div>
       </div>
-
+    
       <!-- Confirm Password Field -->
       <div>
         <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
@@ -41,21 +85,30 @@
           placeholder="Confirm your password"
           class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required
+          #confirmPasswordInput="ngModel"
         />
+        <div *ngIf="confirmPasswordInput.invalid && confirmPasswordInput.touched" class="text-red-500 text-sm">
+          Confirm password is required.
+        </div>
+        <div *ngIf="password !== confirmPassword && confirmPasswordInput.touched" class="text-red-500 text-sm">
+          Passwords do not match.
+        </div>
       </div>
-
+    
       <!-- Register Button -->
-      <button
-        type="submit"
-        class="w-full py-3 px-4 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200"
-      >
+      <button type="submit" class="w-full py-3 px-4 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200">
         Register
       </button>
     </form>
-
+    
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+      <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+    
     <!-- Divider -->
     <div class="my-6 border-t border-gray-300"></div>
-
+    
     <!-- Login Link -->
     <p class="text-center text-sm text-gray-600">
       Already have an account?

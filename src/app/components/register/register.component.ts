@@ -1,38 +1,36 @@
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth'; // Import AngularFireAuth
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ FormsModule, RouterModule ],
+  imports: [ FormsModule, RouterModule, CommonModule ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
   email!: string;
+  firstName!: string;
+  lastName!: string;
   password!: string;
   confirmPassword!: string;
+  isLoading = false;
 
-  private auth = inject(Auth);
+  constructor(private authService: AuthService,private router: Router) {}
 
-  constructor(private router: Router) {}
-
-  onRegister() {
-    if (this.password !== this.confirmPassword) {
-      alert('Passwords do not match');
+  async onRegister(form: NgForm) {
+    if (form.invalid) {
       return;
     }
-    
-    createUserWithEmailAndPassword(this.auth, this.email, this.password)
-      .then((userCredential) => {
-        // Registration successful
-        this.router.navigate(['']); // Navigate to welcome page or any other page
-      })
-      .catch((error) => {
-        // Handle registration errors
-        alert(error.message);
-      });
+
+    this.isLoading = true; // Show loading spinner
+
+    await this.authService.register(this.email, this.password, this.firstName, this.lastName);
+
+    this.isLoading = false; // Hide loading spinner
+    this.router.navigate(['/']);
   }
 }
