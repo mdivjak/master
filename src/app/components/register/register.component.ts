@@ -17,7 +17,9 @@ export class RegisterComponent {
   lastName!: string;
   password!: string;
   confirmPassword!: string;
+  userType!: string;
   isLoading = false;
+
 
   constructor(private authService: AuthService,private router: Router) {}
 
@@ -28,7 +30,7 @@ export class RegisterComponent {
 
     this.isLoading = true; // Show loading spinner
 
-    await this.authService.register(this.email, this.password, this.firstName, this.lastName);
+    await this.authService.register(this.email, this.password, this.firstName, this.lastName, this.userType);
 
     this.isLoading = false; // Hide loading spinner
     this.router.navigate(['/']);

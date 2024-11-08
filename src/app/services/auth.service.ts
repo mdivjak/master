@@ -11,7 +11,7 @@ export class AuthService {
 
   constructor() { }
 
-  async register(email: string, password: string, firstName: string, lastName: string) {
+  async register(email: string, password: string, firstName: string, lastName: string, userType: string) {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
 
@@ -19,7 +19,8 @@ export class AuthService {
     await setDoc(doc(this.firestore, 'users', user.uid), {
       firstName: firstName,
       lastName: lastName,
-      email: email
+      email: email,
+      type: userType
     });
 
     return userCredential;

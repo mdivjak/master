@@ -94,6 +94,26 @@
           Passwords do not match.
         </div>
       </div>
+
+      <!-- User Type Field -->
+      <div>
+        <label for="userType" class="block text-sm font-medium text-gray-700">User Type</label>
+        <select
+          id="userType"
+          [(ngModel)]="userType"
+          name="userType"
+          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          required
+          #userTypeInput="ngModel"
+        >
+          <option value="" disabled selected>Select user type</option>
+          <option value="hiker">Hiker</option>
+          <option value="hikingClub">Hiking Club</option>
+        </select>
+        <div *ngIf="userTypeInput.invalid && userTypeInput.touched" class="text-red-500 text-sm">
+          User type is required.
+        </div>
+      </div>
     
       <!-- Register Button -->
       <button type="submit" class="w-full py-3 px-4 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200">
