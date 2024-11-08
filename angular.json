@@ -29,7 +29,9 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "baseHref": "/master/",
+            "deployUrl": "/master/"
           },
           "configurations": {
             "production": {
@@ -91,7 +93,11 @@
           }
         },
         "deploy": {
-          "builder": "angular-cli-ghpages:deploy"
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "dir": "dist/master/browser",
+            "baseHref": "https://mdivjak.github.io/master/"
+          }
         }
       }
     }
