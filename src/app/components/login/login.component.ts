@@ -22,8 +22,7 @@ export class LoginComponent {
       return;
     }
 
-    let userCredential = await this.authService.login(this.email, this.password);
-    localStorage.setItem('userCredential', JSON.stringify(userCredential));
+    await this.authService.login(this.email, this.password);
     this.router.navigate(['/']);
   }
 

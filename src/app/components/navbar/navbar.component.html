@@ -1,6 +1,12 @@
 <nav class="bg-gray-800 p-4">
     <ul class="flex space-x-4">
+      <ng-container *ngIf="user$ | async as user; else loggedOut">
+        <li><a routerLink="/" class="text-white hover:text-gray-400">Profile</a></li>
+        <li><a (click)="logout()" class="text-white hover:text-gray-400 cursor-pointer">Logout</a></li>
+      </ng-container>
+      <ng-template #loggedOut>
         <li><a routerLink="/login" class="text-white hover:text-gray-400">Login</a></li>
         <li><a routerLink="/register" class="text-white hover:text-gray-400">Register</a></li>
+      </ng-template>
     </ul>
-</nav>
+  </nav>
