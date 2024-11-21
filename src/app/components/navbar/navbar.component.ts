@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { User } from 'firebase/auth';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 
@@ -14,14 +14,27 @@ import { CommonModule } from '@angular/common';
 })
 export class NavbarComponent {
   user$: Observable<User | null>;
+  userType$: Observable<string | null>;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.user$ = this.authService.user$;
+    this.userType$ = this.authService.userType$;
   }
 
   ngOnInit(): void {}
 
   async logout() {
     await this.authService.logout();
+    this.router.navigate(['/']);
+  }
+
+  goToProfile() {
+    this.userType$.pipe(take(1)).subscribe(userType => {
+      if (userType === 'hiker') {
+        this.router.navigate(['/profile-hiker']);
+      } else if (userType === 'hikingClub') {
+        this.router.navigate(['/profile-club']);
+      }
+    });
   }
 }

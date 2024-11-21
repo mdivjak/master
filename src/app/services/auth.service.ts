@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential } from '@angular/fire/auth';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
+import { UserData } from '../models/userdata';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +12,28 @@ export class AuthService {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
   private userSubject = new BehaviorSubject<User | null>(null);
+  private userTypeSubject = new BehaviorSubject<string | null>(null);
 
   constructor() {
-    onAuthStateChanged(this.auth, user => {
+    onAuthStateChanged(this.auth, async (user) => {
+      if(user) {
+        const userDoc = await getDoc(doc(this.firestore, 'users', user.uid));
+        const userData = userDoc.data() as UserData;
+        const userType = userData?.type ?? null;
+        this.userTypeSubject.next(userType);
+      } else {
+        this.userTypeSubject.next(null);
+      }
       this.userSubject.next(user);
     });
   }
 
   get user$() {
     return this.userSubject.asObservable();
+  }
+
+  get userType$() {
+    return this.userTypeSubject.asObservable();
   }
 
   async register(email: string, password: string, firstName: string, lastName: string, userType: string) {
