@@ -1,12 +1,26 @@
 <nav class="bg-gray-800 p-4">
-    <ul class="flex space-x-4">
-      <ng-container *ngIf="user$ | async as user; else loggedOut">
-        <li><a (click)="goToProfile()" class="text-white hover:text-gray-400">Profile</a></li>
-        <li><a (click)="logout()" class="text-white hover:text-gray-400 cursor-pointer">Logout</a></li>
+  <ul class="flex items-center space-x-4 w-full">
+    <!-- Title -->
+    <li class="text-white text-lg">Hiking Platform</li>
+
+    <!-- Spacer to push the rest of the items to the right -->
+    <li class="flex-grow"></li>
+
+    <!-- User-specific options -->
+    <ng-container *ngIf="user$ | async as user; else loggedOut">
+      <ng-container *ngIf="userType$ | async as userType">
+        <li *ngIf="userType === 'hikingClub'">
+          <a routerLink="/create-hiking-tour" class="text-white hover:text-gray-400">Create Hiking Tour</a>
+        </li>
       </ng-container>
-      <ng-template #loggedOut>
-        <li><a routerLink="/login" class="text-white hover:text-gray-400">Login</a></li>
-        <li><a routerLink="/register" class="text-white hover:text-gray-400">Register</a></li>
-      </ng-template>
-    </ul>
-  </nav>
+      <li><a (click)="goToProfile()" class="text-white hover:text-gray-400">Profile</a></li>
+      <li><a (click)="logout()" class="text-white hover:text-gray-400 cursor-pointer">Logout</a></li>
+    </ng-container>
+
+    <!-- Logged out options -->
+    <ng-template #loggedOut>
+      <li><a routerLink="/login" class="text-white hover:text-gray-400">Login</a></li>
+      <li><a routerLink="/register" class="text-white hover:text-gray-400">Register</a></li>
+    </ng-template>
+  </ul>
+</nav>
