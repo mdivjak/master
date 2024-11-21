@@ -36,6 +36,10 @@ export class AuthService {
     return this.userTypeSubject.asObservable();
   }
 
+  get currentUser() {
+    return this.auth.currentUser;
+  }
+
   async register(email: string, password: string, firstName: string, lastName: string, userType: string) {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;

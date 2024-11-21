@@ -1,1 +1,95 @@
-<p>create-hiking-tour works!</p>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Create Hiking Tour</h1>
+    <form (ngSubmit)="onSubmit()" #tourForm="ngForm">
+      <!-- Tour Name -->
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium text-gray-700">Tour Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="tour.name"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+  
+      <!-- Date -->
+      <div class="mb-4">
+        <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          [(ngModel)]="tour.date"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+  
+      <!-- Description -->
+      <div class="mb-4">
+        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          [(ngModel)]="tour.description"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        ></textarea>
+      </div>
+  
+      <!-- GPX File -->
+      <div class="mb-4">
+        <label for="gpxFile" class="block text-sm font-medium text-gray-700">GPX File</label>
+        <input
+          type="file"
+          id="gpxFile"
+          name="gpxFile"
+          (change)="onFileChange($event)"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+  
+      <!-- Difficulty Level -->
+      <div class="mb-4">
+        <label for="difficulty" class="block text-sm font-medium text-gray-700">Difficulty Level</label>
+        <select
+          id="difficulty"
+          name="difficulty"
+          [(ngModel)]="tour.difficulty"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="easy">Easy</option>
+          <option value="moderate">Moderate</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+  
+      <!-- Number of Participants -->
+      <div class="mb-4">
+        <label for="participants" class="block text-sm font-medium text-gray-700">Number of Participants</label>
+        <input
+          type="number"
+          id="participants"
+          name="participants"
+          [(ngModel)]="tour.participants"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="mt-4">
+        <button
+          type="submit"
+          [disabled]="tourForm.invalid"
+          class="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Create Tour
+        </button>
+      </div>
+    </form>
+  </div>
