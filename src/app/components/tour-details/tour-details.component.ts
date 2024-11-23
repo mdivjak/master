@@ -16,10 +16,10 @@ export class TourDetailsComponent {
 
   constructor(private route: ActivatedRoute, private tourService: TourService, private router: Router) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const tourId = this.route.snapshot.paramMap.get('id');
     if (tourId) {
-      this.loadTour(tourId);
+      await this.loadTour(tourId);
     } else {
       this.router.navigate(['/']);
     }
@@ -33,4 +33,5 @@ export class TourDetailsComponent {
       this.tour = tour;
     }
   }
+
 }
