@@ -1,1 +1,25 @@
-<p>profile-club works!</p>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Club Profile</h1>
+    <div *ngIf="clubProfile; else noProfile">
+      <p><strong>Name:</strong> {{ clubProfile.firstName }} {{ clubProfile.lastName }}</p>
+      <p><strong>Email:</strong> {{ clubProfile.email }}</p>
+      <p><strong>Type:</strong> {{ clubProfile.type }}</p>
+      <!-- Add more fields as needed -->
+  
+      <h2 class="text-xl font-bold mt-4">Organized Tours</h2>
+      <ul *ngIf="tours.length > 0; else noTours">
+        <li *ngFor="let tour of tours" class="mb-4 p-4 border rounded shadow">
+          <h3 class="text-lg font-semibold">{{ tour.name }}</h3>
+          <p><strong>Date:</strong> {{ tour.date }}</p>
+          <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
+          <p><strong>Participants:</strong> {{ tour.participants }}</p>
+        </li>
+      </ul>
+      <ng-template #noTours>
+        <p>No tours organized by this club.</p>
+      </ng-template>
+    </div>
+    <ng-template #noProfile>
+      <p>No profile data available.</p>
+    </ng-template>
+  </div>
