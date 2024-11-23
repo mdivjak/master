@@ -19,7 +19,9 @@ export class CreateHikingTourComponent {
     description: '',
     gpxFile: null,
     difficulty: 'easy',
-    participants: 0
+    participants: 0,
+    createdBy: '',
+    createdAt: ''
   };
 
   private firestore = inject(Firestore);
