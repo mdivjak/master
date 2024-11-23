@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { doc, Firestore, getDoc } from '@angular/fire/firestore';
+import { collection, collectionData, doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Tour } from '../models/tour';
+import { combineLatest, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,27 @@ export class TourService {
       console.error('Tour not found');
     }
     return undefined;
+  }
+
+  getTours() {
+    const toursCollection = collection(this.firestore, 'tours');
+    let tours$ = collectionData(toursCollection, { idField: 'id' }).pipe(
+      switchMap((tours: Tour[]) => {
+        if (tours.length === 0) {
+          return of([]);
+        }
+
+        const userObservables = tours.map(tour =>
+          getDoc(doc(this.firestore, 'users', tour.createdBy)).then(userDoc => ({
+            ...tour,
+            createdByName: userDoc.exists() ? userDoc.data()?.['firstName'] : 'Unknown'
+          }))
+        );
+
+        return combineLatest(userObservables);
+      })
+    ) as Observable<(Tour & { createdByName: string })[]>;
+
+    return tours$;
   }
 }
