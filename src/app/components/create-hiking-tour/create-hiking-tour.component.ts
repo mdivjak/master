@@ -17,12 +17,13 @@ export class CreateHikingTourComponent {
     name: '',
     date: '',
     description: '',
-    gpxFile: null,
+    gpxContent: '',
     difficulty: 'easy',
     participants: 0,
     createdBy: '',
     createdAt: ''
   };
+  gpxFile: File | null = null;
 
   private firestore = inject(Firestore);
 
@@ -31,12 +32,12 @@ export class CreateHikingTourComponent {
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.tour.gpxFile = file;
+      this.gpxFile = file;
     }
   }
 
   async onSubmit() {
-    if (this.tour.gpxFile) {
+    if (this.gpxFile) {
       const currentUser = this.authService.currentUser;
       if (currentUser) {
         const reader = new FileReader();
@@ -61,7 +62,7 @@ export class CreateHikingTourComponent {
             console.error('Error adding document:', error);
           }
         };
-        reader.readAsText(this.tour.gpxFile);
+        reader.readAsText(this.gpxFile);
       } else {
         console.error('User is not authenticated');
       }

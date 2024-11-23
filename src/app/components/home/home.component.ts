@@ -4,18 +4,16 @@ import { switchMap, map } from 'rxjs/operators';
 import { Tour } from '../../models/tour';
 import { collection, collectionData, Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-viewDetails(arg0: any) {
-throw new Error('Method not implemented.');
-}
   tours$: Observable<(Tour & { createdByName: string })[]>;
 
   private firestore = inject(Firestore);

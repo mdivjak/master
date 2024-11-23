@@ -20,7 +20,6 @@ export class RegisterComponent {
   userType!: string;
   isLoading = false;
 
-
   constructor(private authService: AuthService,private router: Router) {}
 
   async onRegister(form: NgForm) {

@@ -1,6 +1,8 @@
 ## Backlog
 
 - [ ] input validation throughout the app
+- [ ] remove firestore dependency from home component
+- [ ] remove firestore dependency from create tour component
   
 ### Unregistered user
 - [x] registration
