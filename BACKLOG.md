@@ -2,7 +2,7 @@
 
 - [ ] input validation throughout the app
 - [x] remove firestore dependency from home component
-- [ ] remove firestore dependency from create tour component
+- [x] remove firestore dependency from create tour component
 - [ ] remove firestore dependency from profile club component
   
 ### Unregistered user

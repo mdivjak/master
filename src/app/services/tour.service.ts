@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { collection, collectionData, doc, Firestore, getDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Tour } from '../models/tour';
 import { combineLatest, Observable, of, switchMap } from 'rxjs';
 
@@ -41,5 +41,9 @@ export class TourService {
     ) as Observable<(Tour & { createdByName: string })[]>;
 
     return tours$;
+  }
+
+  async addTour(tour: Tour) {
+    return addDoc(collection(this.firestore, 'tours'), tour);
   }
 }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Tour } from '../../models/tour';
 import { AuthService } from '../../services/auth.service';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import { TourService } from '../../services/tour.service';
 
 @Component({
   selector: 'app-create-hiking-tour',
@@ -25,9 +26,7 @@ export class CreateHikingTourComponent {
   };
   gpxFile: File | null = null;
 
-  private firestore = inject(Firestore);
-
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private tourService: TourService) {}
 
   onFileChange(event: any) {
     const file = event.target.files[0];
@@ -44,19 +43,12 @@ export class CreateHikingTourComponent {
         reader.onload = async () => {
           const gpxContent = reader.result as string;
 
-          const tourData = {
-            name: this.tour.name,
-            date: this.tour.date,
-            description: this.tour.description,
-            gpxContent: gpxContent,
-            difficulty: this.tour.difficulty,
-            participants: this.tour.participants,
-            createdBy: currentUser.uid,
-            createdAt: new Date().toISOString()
-          };
+          this.tour.gpxContent = gpxContent;
+          this.tour.createdBy = currentUser.uid;
+          this.tour.createdAt = new Date().toISOString();
 
           try {
-            const docRef = await addDoc(collection(this.firestore, 'tours'), tourData);
+            const docRef = await this.tourService.addTour(this.tour);
             console.log('Tour created with ID:', docRef.id);
           } catch (error) {
             console.error('Error adding document:', error);
