@@ -3,8 +3,8 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tour } from '../../models/tour';
 import { AuthService } from '../../services/auth.service';
-import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { TourService } from '../../services/tour.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-hiking-tour',
@@ -26,7 +26,10 @@ export class CreateHikingTourComponent {
   };
   gpxFile: File | null = null;
 
-  constructor(private authService: AuthService, private tourService: TourService) {}
+  constructor(
+    private authService: AuthService,
+    private tourService: TourService,
+    private router: Router) {}
 
   onFileChange(event: any) {
     const file = event.target.files[0];
@@ -50,6 +53,7 @@ export class CreateHikingTourComponent {
           try {
             const docRef = await this.tourService.addTour(this.tour);
             console.log('Tour created with ID:', docRef.id);
+            this.router.navigate(['/']);
           } catch (error) {
             console.error('Error adding document:', error);
           }

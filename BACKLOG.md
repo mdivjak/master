@@ -8,7 +8,8 @@
 ### Unregistered user
 - [x] registration
 - [x] viewing list of hiking tours
-- [ ] viewing one hiking tour
+- [x] viewing one hiking tour
+  - [ ] show map when showing one tour
 - [ ] viewing profiles of hiking clubs
 
 ### Registered hiking club
@@ -26,7 +27,8 @@
 - [ ] viewing future tours
 - [ ] searching future tours
 - [ ] viewing profiles of hiking clubs
-- [ ] apply for a tour
+- [x] apply for a tour
+  - [ ] hide / disable apply button once user applies
 - [ ] cancel tour application
 - [ ] notifications on application status
 - [ ] grading and reviewing a tour

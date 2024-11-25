@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, getDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { Tour } from '../models/tour';
 import { combineLatest, Observable, of, switchMap } from 'rxjs';
 
@@ -14,7 +14,8 @@ export class TourService {
   async loadTour(tourId: string) {
     const tourDoc = await getDoc(doc(this.firestore, 'tours', tourId));
     if (tourDoc.exists()) {
-      return tourDoc.data() as Tour;
+      const tourData = tourDoc.data() as Tour;
+      return { ...tourData, id: tourDoc.id };
     } else {
       console.error('Tour not found');
     }
@@ -45,5 +46,21 @@ export class TourService {
 
   async addTour(tour: Tour) {
     return addDoc(collection(this.firestore, 'tours'), tour);
+  }
+
+  async applyForTour(tourId: string, userId: string): Promise<void> {
+    if (!tourId || !userId) {
+      throw new Error('Invalid tourId or userId');
+    }
+    const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
+    const participantDoc = await getDoc(participantRef);
+    if (!participantDoc.exists()) {
+      await setDoc(participantRef, {
+        status: 'pending',
+        appliedAt: new Date().toISOString()
+      });
+    } else {
+      throw new Error('You have already applied for this tour.');
+    }
   }
 }
