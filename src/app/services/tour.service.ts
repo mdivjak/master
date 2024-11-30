@@ -63,4 +63,10 @@ export class TourService {
       throw new Error('You have already applied for this tour.');
     }
   }
+
+  async hasUserApplied(tourId: string, userId: string): Promise<boolean> {
+    const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
+    const participantDoc = await getDoc(participantRef);
+    return participantDoc.exists();
+  }
 }
