@@ -28,7 +28,7 @@
 - [ ] searching future tours
 - [ ] viewing profiles of hiking clubs
 - [x] apply for a tour
-  - [ ] hide / disable apply button once user applies
+  - [x] hide / disable apply button once user applies
 - [ ] cancel tour application
 - [ ] notifications on application status
 - [ ] grading and reviewing a tour
