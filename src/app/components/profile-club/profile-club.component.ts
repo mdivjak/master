@@ -4,11 +4,12 @@ import { AuthService } from '../../services/auth.service';
 import { UserData } from '../../models/userdata';
 import { NgFor, NgIf } from '@angular/common';
 import { Tour } from '../../models/tour';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile-club',
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, FormsModule],
   templateUrl: './profile-club.component.html',
   styleUrl: './profile-club.component.css'
 })
@@ -16,6 +17,10 @@ export class ProfileClubComponent {
   clubProfile: UserData | null = null;
   private firestore = inject(Firestore);
   tours!: Tour[];
+
+  editMode: boolean = false;
+  firstName: string = '';
+  lastName: string = '';
 
   constructor(private authService: AuthService) {}
 
@@ -25,6 +30,8 @@ export class ProfileClubComponent {
       const userDoc = await getDoc(doc(this.firestore, 'users', currentUser.uid));
       if (userDoc.exists()) {
         this.clubProfile = userDoc.data() as UserData;
+        this.firstName = this.clubProfile.firstName;
+        this.lastName = this.clubProfile.lastName;
         await this.loadTours(currentUser.uid);
       } else {
         console.error('User not found');
@@ -34,6 +41,10 @@ export class ProfileClubComponent {
     }
   }
 
+  toggleEditMode() {
+    this.editMode = !this.editMode;
+  }
+
   async loadTours(userId: string): Promise<void> {
     const toursCollection = collection(this.firestore, 'tours');
     const q = query(toursCollection, where('createdBy', '==', userId));
@@ -41,4 +52,14 @@ export class ProfileClubComponent {
     this.tours = querySnapshot.docs.map(doc => doc.data() as Tour);
   }
 
+  async saveProfile() {
+    if(this.clubProfile) {
+      this.clubProfile.firstName = this.firstName;
+      this.clubProfile.lastName = this.lastName;
+  
+      this.authService.updateUserData(this.clubProfile);
+  
+      this.toggleEditMode();
+    }
+  }
 }

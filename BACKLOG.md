@@ -4,6 +4,7 @@
 - [x] remove firestore dependency from home component
 - [x] remove firestore dependency from create tour component
 - [ ] remove firestore dependency from profile club component
+- [ ] hiking clubs should only have name - there is no first name last name
   
 ### Unregistered user
 - [x] registration
@@ -14,14 +15,14 @@
 
 ### Registered hiking club
 - [x] login logout
-- [ ] editing profile info
+- [x] editing profile info
 - [x] creating hiking tours
 - [ ] viewing hikers that applied for a tour
 - [ ] accepting or declining a tour
 
 ### Registered hiker
 - [x] login logout
-- [ ] editing profile info
+- [x] editing profile info
 - [ ] viewing history of past tours that user participated in
 - [ ] viewing history stats
 - [ ] viewing future tours
