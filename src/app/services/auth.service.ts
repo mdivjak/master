@@ -13,12 +13,16 @@ export class AuthService {
   private firestore = inject(Firestore);
   private userSubject = new BehaviorSubject<User | null>(null);
   private userTypeSubject = new BehaviorSubject<string | null>(null);
+  private userDataSubject = new BehaviorSubject<UserData | null>(null);
 
   constructor() {
     onAuthStateChanged(this.auth, async (user) => {
       if(user) {
         const userDoc = await getDoc(doc(this.firestore, 'users', user.uid));
+        
         const userData = userDoc.data() as UserData;
+        this.userDataSubject.next(userData);
+
         const userType = userData?.type ?? null;
         this.userTypeSubject.next(userType);
       } else {
@@ -34,6 +38,10 @@ export class AuthService {
 
   get userType$() {
     return this.userTypeSubject.asObservable();
+  }
+
+  get userData$() {
+    return this.userDataSubject.asObservable();
   }
 
   get currentUser() {
@@ -61,5 +69,13 @@ export class AuthService {
 
   async logout() {
     return await signOut(this.auth);
+  }
+
+  updateUserData(userProfile: UserData) {
+    if(this.currentUser) {
+      return setDoc(doc(this.firestore, 'users', this.currentUser.uid), userProfile);
+    } else {
+      throw new Error('User is not logged in');
+    }
   }
 }
