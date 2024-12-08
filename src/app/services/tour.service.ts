@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { Tour } from '../models/tour';
 import { combineLatest, Observable, of, switchMap } from 'rxjs';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { combineLatest, Observable, of, switchMap } from 'rxjs';
 export class TourService {
   private firestore = inject(Firestore);
 
-  constructor() { }
+  constructor(private notificationService: NotificationService) { }
 
   async loadTour(tourId: string) {
     const tourDoc = await getDoc(doc(this.firestore, 'tours', tourId));
@@ -48,7 +49,7 @@ export class TourService {
     return addDoc(collection(this.firestore, 'tours'), tour);
   }
 
-  async applyForTour(tourId: string, userId: string): Promise<void> {
+  async applyForTour(tourId: string, tourOwner: string, userId: string): Promise<void> {
     if (!tourId || !userId) {
       throw new Error('Invalid tourId or userId');
     }
@@ -59,8 +60,26 @@ export class TourService {
         status: 'pending',
         appliedAt: new Date().toISOString()
       });
+      await this.notificationService.sendNotification(tourOwner, 'application', 'User applied for a tour!');
     } else {
       throw new Error('You have already applied for this tour.');
+    }
+  }
+
+  async updateApplicationStatus(tourId: string, userId: string, status: 'accepted' | 'rejected'): Promise<void> {
+    if (!tourId || !userId) {
+      throw new Error('Invalid tourId or userId');
+    }
+    const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
+    const participantDoc = await getDoc(participantRef);
+    if (participantDoc.exists()) {
+      await setDoc(participantRef, {
+        status: status,
+        updatedAt: new Date().toISOString()
+      });
+      await this.notificationService.sendNotification(userId, 'statusUpdate', `Your application for the tour has been ${status}`);
+    } else {
+      throw new Error('User has not applied for this tour.');
     }
   }
 
