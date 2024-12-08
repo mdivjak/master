@@ -4,6 +4,8 @@ import { User } from 'firebase/auth';
 import { Observable, take } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { UserData, Notification } from '../../models/userdata';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,11 +16,35 @@ import { CommonModule } from '@angular/common';
 })
 export class NavbarComponent {
   user$: Observable<User | null>;
+  user: User | null = null;
   userType$: Observable<string | null>;
+  userData$: Observable<UserData | null>;
+  notifications: Notification[] = [];
+  showNotifications: boolean = false;
+  unreadNotficationsMarker: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private notificationService: NotificationService) {
     this.user$ = this.authService.user$;
+    this.user$.subscribe(user => {
+      if (user) {
+        this.user = user;
+      }
+    });
+
     this.userType$ = this.authService.userType$;
+
+    this.userData$ = this.authService.userData$;
+    this.userData$.subscribe(userData => {
+      if (userData && userData.notifications) {
+        this.notifications = userData.notifications;
+        this.unreadNotficationsMarker = this.notifications.some(
+          notification => !notification.read
+        );
+      }
+    });
   }
 
   ngOnInit(): void {}
@@ -36,5 +62,18 @@ export class NavbarComponent {
         this.router.navigate(['/profile-club']);
       }
     });
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+  }
+
+  async markAsRead(notification: Notification) {
+    const index = this.notifications.findIndex(n => n.date === notification.date);
+    await this.notificationService.markAsRead(this.user!.uid, index);
+    notification.read = true;
+    this.unreadNotficationsMarker = this.notifications.some(
+      notification => !notification.read
+    );
   }
 }

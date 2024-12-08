@@ -3,4 +3,12 @@ export interface UserData {
     firstName: string;
     lastName: string;
     type: string;
+    notifications: Notification[];
+}
+
+export interface Notification {
+    type: string;
+    message: string;
+    read: boolean;
+    date: Date;
 }
