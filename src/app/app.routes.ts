@@ -8,6 +8,7 @@ import { authGuard } from './guards/auth.guard';
 import { CreateHikingTourComponent } from './components/create-hiking-tour/create-hiking-tour.component';
 import { hikingClubGuard } from './guards/hiking-club.guard';
 import { TourDetailsComponent } from './components/tour-details/tour-details.component';
+import { TourParticipantsComponent } from './components/tour-participants/tour-participants.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -17,4 +18,5 @@ export const routes: Routes = [
     { path: 'profile-hiker', component: ProfileHikerComponent, canActivate: [authGuard] },
     { path: 'create-hiking-tour', component: CreateHikingTourComponent, canActivate: [hikingClubGuard] },
     { path: 'tour-details/:id', component: TourDetailsComponent },
+    { path: 'tour-participants/:id', component: TourParticipantsComponent, canActivate: [hikingClubGuard] }
 ];

@@ -3,6 +3,7 @@ import { addDoc, collection, collectionData, doc, Firestore, getDoc, setDoc } fr
 import { Tour } from '../models/tour';
 import { combineLatest, Observable, of, switchMap } from 'rxjs';
 import { NotificationService } from './notification.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -87,5 +88,12 @@ export class TourService {
     const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
     const participantDoc = await getDoc(participantRef);
     return participantDoc.exists();
+  }
+
+  loadParticipants(tourId: string) {
+    const participantsCollection = collection(this.firestore, `tours/${tourId}/applications`);
+    return collectionData(participantsCollection, { idField: 'id' }).pipe(
+        map((applications: any[]) => applications.map(app => ({ ...app, id: app.id })))
+      ) as Observable<any[]>;
   }
 }

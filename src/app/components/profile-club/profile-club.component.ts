@@ -5,11 +5,12 @@ import { UserData } from '../../models/userdata';
 import { NgFor, NgIf } from '@angular/common';
 import { Tour } from '../../models/tour';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile-club',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule],
+  imports: [NgIf, NgFor, FormsModule, RouterLink],
   templateUrl: './profile-club.component.html',
   styleUrl: './profile-club.component.css'
 })
@@ -49,7 +50,11 @@ export class ProfileClubComponent {
     const toursCollection = collection(this.firestore, 'tours');
     const q = query(toursCollection, where('createdBy', '==', userId));
     const querySnapshot = await getDocs(q);
-    this.tours = querySnapshot.docs.map(doc => doc.data() as Tour);
+    this.tours = querySnapshot.docs.map(doc => {
+      const tour = doc.data() as Tour;
+      tour.id = doc.id;
+      return tour;
+    });
   }
 
   async saveProfile() {
