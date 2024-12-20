@@ -17,7 +17,7 @@
 - [x] login logout
 - [x] editing profile info
 - [x] creating hiking tours
-- [ ] viewing hikers that applied for a tour
+- [x] viewing hikers that applied for a tour
 - [ ] accepting or declining a tour
 - [x] notification on applied hiker
 
