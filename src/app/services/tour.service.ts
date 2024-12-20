@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, Firestore, getDoc, getDocs, setDoc } from '@angular/fire/firestore';
 import { Tour } from '../models/tour';
 import { combineLatest, Observable, of, switchMap } from 'rxjs';
 import { NotificationService } from './notification.service';
@@ -90,10 +90,10 @@ export class TourService {
     return participantDoc.exists();
   }
 
-  loadParticipants(tourId: string) {
-    const participantsCollection = collection(this.firestore, `tours/${tourId}/applications`);
-    return collectionData(participantsCollection, { idField: 'id' }).pipe(
-        map((applications: any[]) => applications.map(app => ({ ...app, id: app.id })))
-      ) as Observable<any[]>;
+  async loadAllApplications(tourId: string): Promise<any[]> {
+    const applicationsCollection = collection(this.firestore, `tours/${tourId}/applications`);
+    const applicationsSnapshot = await getDocs(applicationsCollection);
+    const applications = applicationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return applications;
   }
 }

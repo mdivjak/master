@@ -13,3 +13,29 @@
         <p class="text-gray-700">{{ tour.date }}</p>
     </div>
 </div>
+<div class="bg-white shadow-md rounded-lg p-6 mb-6 m-6">
+    <h3 class="text-2xl font-bold mb-4">Application Status</h3>
+    <table class="min-w-full bg-white">
+        <thead>
+            <tr>
+                <th class="py-2 px-4 border-b border-gray-200 text-left">First Name</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left">Last Name</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left">E-mail</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left">Status</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let application of applications">
+                <td class="py-2 px-4 border-b border-gray-200">{{ application.userData.firstName }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ application.userData.lastName }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ application.userData.email }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ application.status }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">
+                    <button class="bg-green-500 text-white px-4 py-2 rounded mr-2" (click)="acceptApplication(application)">Accept</button>
+                    <button class="bg-red-500 text-white px-4 py-2 rounded" (click)="rejectApplication(application)">Reject</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
