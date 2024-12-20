@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TourService {
+
   private firestore = inject(Firestore);
 
   constructor(private notificationService: NotificationService) { }
@@ -95,5 +96,15 @@ export class TourService {
     const applicationsSnapshot = await getDocs(applicationsCollection);
     const applications = applicationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     return applications;
+  }
+
+  rejectApplication(tourId: string, applicationId: string) {
+    const applicationRef = doc(this.firestore, `tours/${tourId}/applications/${applicationId}`);
+    return setDoc(applicationRef, { status: 'rejected'}, { merge: true });
+  }
+
+  acceptApplication(tourId: string, applicationId: any) {
+    const applicationRef = doc(this.firestore, `tours/${tourId}/applications/${applicationId}`);
+    return setDoc(applicationRef, { status: 'accepted'}, { merge: true });
   }
 }

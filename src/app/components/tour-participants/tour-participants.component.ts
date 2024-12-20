@@ -13,12 +13,7 @@ import { NgFor } from '@angular/common';
   styleUrl: './tour-participants.component.css'
 })
 export class TourParticipantsComponent {
-rejectApplication(_t24: any) {
-throw new Error('Method not implemented.');
-}
-acceptApplication(_t24: any) {
-throw new Error('Method not implemented.');
-}
+  tourId!: string;
   tour!: Tour;
   applications!: any[];
 
@@ -32,9 +27,9 @@ throw new Error('Method not implemented.');
   async ngOnInit() {
     const tourId = this.route.snapshot.paramMap.get('id');
     if(tourId) {
+      this.tourId = tourId;
       await this.loadTour(tourId);
-      let applications = await this.loadParticipants();
-      this.applications = await this.processApplication(applications);
+      this.applications = await this.loadApplications();
     } else {
       this.router.navigate(['/']);
     }
@@ -49,10 +44,11 @@ throw new Error('Method not implemented.');
     }
   }
 
-  async loadParticipants() {
+  async loadApplications() {
     if(this.tour.id) {
-      const data = await this.tourService.loadAllApplications(this.tour.id);
-      return data;
+      let applications = await this.tourService.loadAllApplications(this.tour.id);
+      applications = await this.processApplication(applications);
+      return applications;
     } else {
       throw new Error('Tour ID is missing');
     }
@@ -60,12 +56,19 @@ throw new Error('Method not implemented.');
 
   async processApplication(applications: any) {
     for (let application of applications) {
-      console.log(application.id);
       const userData = await this.userService.loadUserData(application.id);
-      console.log(userData);
       application.userData = userData;
     }
     return applications;
   }
 
+  async rejectApplication(application: any) {
+    await this.tourService.rejectApplication(this.tourId, application.id);
+    this.applications = await this.loadApplications();
+  }
+
+  async acceptApplication(application: any) {
+    await this.tourService.acceptApplication(this.tourId, application.id);
+    this.applications = await this.loadApplications();
+  }
 }
