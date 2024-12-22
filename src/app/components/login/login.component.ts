@@ -15,7 +15,13 @@ export class LoginComponent {
   email!: string;
   password!: string;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.router.navigate(['/']);
+      }
+    });
+  }
 
   async onLogin(form: NgForm) {
     if (form.invalid) {
