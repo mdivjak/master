@@ -18,19 +18,22 @@
 - [x] editing profile info
 - [x] creating hiking tours
 - [x] viewing hikers that applied for a tour
-- [ ] accepting or declining a tour
+- [x] accepting or declining a tour
+  - [ ] send a notification to user on status change
+  - [ ] send comment to user with status change
 - [x] notification on applied hiker
 
 ### Registered hiker
 - [x] login logout
 - [x] editing profile info
+- [ ] my tours page - user sees all tours with active applications
 - [ ] viewing history of past tours that user participated in
 - [ ] viewing history stats
 - [ ] viewing future tours
 - [ ] searching future tours
 - [ ] viewing profiles of hiking clubs
 - [x] apply for a tour
-  - [x] hide / disable apply button once user applies
+  - [x] disable apply button once user applies
 - [ ] cancel tour application
 - [ ] notifications on application status
 - [ ] grading and reviewing a tour
