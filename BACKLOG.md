@@ -19,7 +19,7 @@
 - [x] creating hiking tours
 - [x] viewing hikers that applied for a tour
 - [x] accepting or declining a tour
-  - [ ] send a notification to user on status change
+  - [x] send a notification to user on status change
   - [ ] send comment to user with status change
 - [x] notification on applied hiker
 

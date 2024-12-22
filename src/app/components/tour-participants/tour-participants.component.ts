@@ -4,6 +4,7 @@ import { TourService } from '../../services/tour.service';
 import { Tour } from '../../models/tour';
 import { UserService } from '../../services/user.service';
 import { NgFor } from '@angular/common';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-tour-participants',
@@ -21,6 +22,7 @@ export class TourParticipantsComponent {
     private route: ActivatedRoute,
     private tourService: TourService,
     private userService: UserService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -64,11 +66,13 @@ export class TourParticipantsComponent {
 
   async rejectApplication(application: any) {
     await this.tourService.rejectApplication(this.tourId, application.id);
+    this.notificationService.sendNotification(application.id, 'statusUpdate', `Your application for ${this.tour.name} has been rejected`);
     this.applications = await this.loadApplications();
   }
 
   async acceptApplication(application: any) {
     await this.tourService.acceptApplication(this.tourId, application.id);
+    this.notificationService.sendNotification(application.id, 'statusUpdate', `Your application for ${this.tour.name} has been accepted`);
     this.applications = await this.loadApplications();
   }
 }
