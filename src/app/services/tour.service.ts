@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, doc, Firestore, getDoc, getDocs, setDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
 import { Tour } from '../models/tour';
-import { combineLatest, Observable, of, switchMap } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable, of, switchMap } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { map } from 'rxjs/operators';
 
@@ -106,5 +106,26 @@ export class TourService {
   acceptApplication(tourId: string, applicationId: any) {
     const applicationRef = doc(this.firestore, `tours/${tourId}/applications/${applicationId}`);
     return setDoc(applicationRef, { status: 'accepted'}, { merge: true });
+  }
+
+  cancelApplication(tourId: string, applicationId: any) {
+    const applicationRef = doc(this.firestore, `tours/${tourId}/applications/${applicationId}`);
+    return setDoc(applicationRef, { status: 'canceled'}, { merge: true });
+  }
+
+  async getToursUserAppliedFor(userId: string): Promise<Tour[]> {
+    const toursRef = collection(this.firestore, 'tours') as CollectionReference;
+    const toursSnapshot = await firstValueFrom(collectionData(toursRef, { idField: 'id' }));
+    const appliedTours: any[] = [];
+    for (const tour of toursSnapshot as Tour[]) {
+      const applicationsRef = doc(this.firestore, `tours/${tour.id}/applications/${userId}`);
+      const userApplication = await getDoc(applicationsRef);
+
+      if (userApplication.exists()) {
+        appliedTours.push({ id: tour.id, ...tour, application: userApplication.data() });
+      }
+    }
+
+    return appliedTours;
   }
 }

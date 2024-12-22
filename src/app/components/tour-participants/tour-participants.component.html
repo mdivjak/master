@@ -31,7 +31,7 @@
                 <td class="py-2 px-4 border-b border-gray-200">{{ application.userData.lastName }}</td>
                 <td class="py-2 px-4 border-b border-gray-200">{{ application.userData.email }}</td>
                 <td class="py-2 px-4 border-b border-gray-200">{{ application.status }}</td>
-                <td class="py-2 px-4 border-b border-gray-200">
+                <td *ngIf="application.status != 'canceled'" class="py-2 px-4 border-b border-gray-200">
                     <button class="bg-green-500 text-white px-4 py-2 rounded mr-2" (click)="acceptApplication(application)">Accept</button>
                     <button class="bg-red-500 text-white px-4 py-2 rounded" (click)="rejectApplication(application)">Reject</button>
                 </td>

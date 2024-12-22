@@ -5,6 +5,7 @@
 - [x] remove firestore dependency from create tour component
 - [ ] remove firestore dependency from profile club component
 - [ ] hiking clubs should only have name - there is no first name last name
+- [ ] mark notification as read does not work
   
 ### Unregistered user
 - [x] registration
@@ -26,7 +27,7 @@
 ### Registered hiker
 - [x] login logout
 - [x] editing profile info
-- [ ] my tours page - user sees all tours with active applications
+- [x] my tours page - user sees all tours with active applications
 - [ ] viewing history of past tours that user participated in
 - [ ] viewing history stats
 - [ ] viewing future tours
@@ -34,6 +35,6 @@
 - [ ] viewing profiles of hiking clubs
 - [x] apply for a tour
   - [x] disable apply button once user applies
-- [ ] cancel tour application
-- [ ] notifications on application status
+- [x] cancel tour application
+- [x] notifications on application status
 - [ ] grading and reviewing a tour

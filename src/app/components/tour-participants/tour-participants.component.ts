@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TourService } from '../../services/tour.service';
 import { Tour } from '../../models/tour';
 import { UserService } from '../../services/user.service';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-tour-participants',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   templateUrl: './tour-participants.component.html',
   styleUrl: './tour-participants.component.css'
 })
