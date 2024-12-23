@@ -11,7 +11,8 @@
 - [x] registration
 - [x] viewing list of hiking tours
 - [x] viewing one hiking tour
-  - [ ] show map when showing one tour
+  - [x] show map when showing one tour
+  - [ ] FIX: markers not showing on map
 - [ ] viewing profiles of hiking clubs
 
 ### Registered hiking club

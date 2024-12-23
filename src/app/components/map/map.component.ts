@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as L from 'leaflet';
+import 'leaflet-gpx';
 
 @Component({
   selector: 'app-map',
@@ -9,15 +10,16 @@ import * as L from 'leaflet';
   styleUrl: './map.component.css'
 })
 export class MapComponent implements OnInit, AfterViewInit{
-onMapReady($event: Event) {
-throw new Error('Method not implemented.');
-}
+  @Input() gpxContent!: string;
   private map!: L.Map;
 
-  ngOnInit(): void {}
+  constructor() {}
+
+  async ngOnInit() {}
   
   ngAfterViewInit(): void {
     this.initializeMap();
+    this.loadGpxContent(this.gpxContent);
   }
 
   initializeMap(): void {
@@ -33,5 +35,14 @@ throw new Error('Method not implemented.');
     });
 
     tiles.addTo(this.map);
+  }
+
+  loadGpxContent(gpxContent: string): void {
+    const gpxLayer = new L.GPX(gpxContent, {
+      async: true,
+      marker_options: undefined
+    }).on('loaded', (e: any) => {
+      this.map.fitBounds(e.target.getBounds());
+    }).addTo(this.map);
   }
 }

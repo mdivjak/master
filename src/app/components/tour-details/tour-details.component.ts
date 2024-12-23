@@ -4,11 +4,12 @@ import { Tour } from '../../models/tour';
 import { TourService } from '../../services/tour.service';
 import { NgClass, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { MapComponent } from "../map/map.component";
 
 @Component({
   selector: 'app-tour-details',
   standalone: true,
-  imports: [NgIf, NgClass],
+  imports: [NgIf, NgClass, MapComponent],
   templateUrl: './tour-details.component.html',
   styleUrl: './tour-details.component.css'
 })
