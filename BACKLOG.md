@@ -5,7 +5,7 @@
 - [x] remove firestore dependency from create tour component
 - [ ] remove firestore dependency from profile club component
 - [ ] hiking clubs should only have name - there is no first name last name
-- [ ] mark notification as read does not work
+- [x] fixed - mark notification as read does not work
   
 ### Unregistered user
 - [x] registration

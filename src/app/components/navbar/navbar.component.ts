@@ -69,7 +69,7 @@ export class NavbarComponent {
   }
 
   async markAsRead(notification: Notification) {
-    const index = this.notifications.findIndex(n => n.date === notification.date);
+    const index = this.notifications.findIndex(n => n.createdAt === notification.createdAt);
     await this.notificationService.markAsRead(this.user!.uid, index);
     notification.read = true;
     this.unreadNotficationsMarker = this.notifications.some(
