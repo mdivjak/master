@@ -19,8 +19,11 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ tour.date }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ tour.application.status }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <button *ngIf="tour.application.status === 'accepted'" (click)="cancelApplication(tour.id)" class="mt-2 py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <button *ngIf="!isPastTour(tour.date) && tour.application.status === 'accepted'" (click)="cancelApplication(tour.id)" class="mt-2 py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
                                 Cancel
+                            </button>
+                            <button *ngIf="isPastTour(tour.date) && !tour.hasReviewed && tour.application.status === 'accepted'" (click)="openReviewModal(tour.id)" class="mt-2 py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                Review
                             </button>
                         </td>
                 </tr>
@@ -29,3 +32,5 @@
         </div>
     </div>
 </div>
+
+<app-review-modal *ngIf="showReviewModal" [tourId]="selectedTourId" (reviewSubmitted)="handleReviewSubmission($event)"></app-review-modal>

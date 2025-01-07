@@ -122,10 +122,22 @@ export class TourService {
       const userApplication = await getDoc(applicationsRef);
 
       if (userApplication.exists()) {
-        appliedTours.push({ id: tour.id, ...tour, application: userApplication.data() });
+        const reviewRef = doc(this.firestore, `tours/${tour.id}/reviews/${userId}`);
+        const userReview = await getDoc(reviewRef);
+        appliedTours.push({ id: tour.id, ...tour, application: userApplication.data(),  hasReviewed: userReview.exists() });
       }
     }
 
     return appliedTours;
+  }
+
+  async saveReview(tourId: string, userId: string, review: string, rating: number): Promise<void> {
+    const reviewRef = doc(this.firestore, `tours/${tourId}/reviews/${userId}`);
+    await setDoc(reviewRef, {
+      userId: userId,
+      review: review,
+      rating: rating,
+      date: new Date().toISOString()
+    });
   }
 }

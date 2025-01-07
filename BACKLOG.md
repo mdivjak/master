@@ -19,11 +19,12 @@
 - [x] login logout
 - [x] editing profile info
 - [x] creating hiking tours
+  - [ ] add photos when creating tours
 - [x] viewing hikers that applied for a tour
 - [x] accepting or declining a tour
   - [x] send a notification to user on status change
-  - [ ] send comment to user with status change
 - [x] notification on applied hiker
+  - [ ] personalize the notification message
 
 ### Registered hiker
 - [x] login logout
@@ -38,4 +39,5 @@
   - [x] disable apply button once user applies
 - [x] cancel tour application
 - [x] notifications on application status
-- [ ] grading and reviewing a tour
+- [x] grading and reviewing a tour
+  - [ ] show review that user left when looking at my tours
