@@ -25,6 +25,18 @@ export class TourService {
     return undefined;
   }
 
+  async loadTours(userId: string) {
+    const toursCollection = collection(this.firestore, 'tours');
+    const q = query(toursCollection, where('createdBy', '==', userId));
+    const querySnapshot = await getDocs(q);
+    const tours = querySnapshot.docs.map(doc => {
+      const tour = doc.data() as Tour;
+      tour.id = doc.id;
+      return tour;
+    });
+    return tours;
+  }
+
   getTours() {
     const toursCollection = collection(this.firestore, 'tours');
     let tours$ = collectionData(toursCollection, { idField: 'id' }).pipe(

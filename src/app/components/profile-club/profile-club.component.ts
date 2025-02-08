@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
+import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserData } from '../../models/userdata';
 import { NgFor, NgIf } from '@angular/common';
 import { Tour } from '../../models/tour';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { TourService } from '../../services/tour.service';
 
 @Component({
   selector: 'app-profile-club',
@@ -15,56 +15,57 @@ import { RouterLink } from '@angular/router';
   styleUrl: './profile-club.component.css'
 })
 export class ProfileClubComponent {
-  clubProfile: UserData | null = null;
-  private firestore = inject(Firestore);
+  clubProfile!: UserData;
   tours!: Tour[];
 
   editMode: boolean = false;
-  firstName: string = '';
-  lastName: string = '';
+  name!: string;
+  photoString!: string;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private tourService: TourService) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit() {
     const currentUser = this.authService.currentUser;
-    if (currentUser) {
-      const userDoc = await getDoc(doc(this.firestore, 'users', currentUser.uid));
-      if (userDoc.exists()) {
-        this.clubProfile = userDoc.data() as UserData;
-        this.firstName = this.clubProfile.firstName;
-        this.lastName = this.clubProfile.lastName;
-        await this.loadTours(currentUser.uid);
-      } else {
-        console.error('User not found');
-      }
-    } else {
-      console.error('User is not authenticated');
+    if(!currentUser) {
+      this.router.navigate(['/login']);
     }
+
+    this.authService.userData$.subscribe(async userData => {
+      const cUserData = userData;
+      if(cUserData) {
+        this.clubProfile = cUserData;
+        this.name = this.clubProfile.name;
+        this.tours = await this.tourService.loadTours(currentUser!.uid);
+      }
+    });
   }
 
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
 
-  async loadTours(userId: string): Promise<void> {
-    const toursCollection = collection(this.firestore, 'tours');
-    const q = query(toursCollection, where('createdBy', '==', userId));
-    const querySnapshot = await getDocs(q);
-    this.tours = querySnapshot.docs.map(doc => {
-      const tour = doc.data() as Tour;
-      tour.id = doc.id;
-      return tour;
-    });
-  }
-
   async saveProfile() {
     if(this.clubProfile) {
-      this.clubProfile.firstName = this.firstName;
-      this.clubProfile.lastName = this.lastName;
+      this.clubProfile.name = this.name;
+      this.clubProfile.photo = this.photoString;
   
       this.authService.updateUserData(this.clubProfile);
   
       this.toggleEditMode();
     }
+  }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.photoString = reader.result as string;
+    };
+
+    reader.readAsDataURL(file);
   }
 }
