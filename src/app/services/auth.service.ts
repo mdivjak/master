@@ -48,16 +48,16 @@ export class AuthService {
     return this.auth.currentUser;
   }
 
-  async register(email: string, password: string, firstName: string, lastName: string, userType: string) {
+  async register(photoString: string, email: string, password: string, name: string, userType: string) {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
 
     // Save user details in Firestore
     await setDoc(doc(this.firestore, 'users', user.uid), {
-      firstName: firstName,
-      lastName: lastName,
+      name: name,
       email: email,
-      type: userType
+      type: userType,
+      photo: photoString
     });
 
     return userCredential;

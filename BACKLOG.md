@@ -9,6 +9,7 @@
   
 ### Unregistered user
 - [x] registration
+  - [x] save profile photo
 - [x] viewing list of hiking tours
 - [x] viewing one hiking tour
   - [x] show map when showing one tour

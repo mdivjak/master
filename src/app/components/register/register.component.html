@@ -2,16 +2,29 @@
   <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
     <h2 class="text-2xl font-bold text-center text-gray-800">Create an Account</h2>
     <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)">
+       <!-- Profile Photo Field -->
+       <div>
+        <label for="profilePhoto" class="input-label">Profile Photo</label>
+        <input
+          type="file"
+          id="profilePhoto"
+          accept=".jpg,.jpeg,.png"
+          (change)="onFileChange($event)"
+          class="input-field"
+          required
+        />
+      </div>
+
       <!-- Email Field -->
       <div>
-        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <label for="email" class="input-label">Email</label>
         <input
           type="email"
           id="email"
           [(ngModel)]="email"
           name="email"
           placeholder="Enter your email"
-          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="input-field"
           required
           #emailInput="ngModel"
         />
@@ -22,50 +35,32 @@
     
       <!-- First Name Field -->
       <div>
-        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+        <label for="name" class="input-label">Name</label>
         <input
           type="text"
-          id="firstName"
-          [(ngModel)]="firstName"
-          name="firstName"
-          placeholder="Enter your first name"
-          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          id="name"
+          [(ngModel)]="name"
+          name="name"
+          placeholder="Enter your name"
+          class="input-field"
           required
-          #firstNameInput="ngModel"
+          #nameInput="ngModel"
         />
-        <div *ngIf="firstNameInput.invalid && firstNameInput.touched" class="text-red-500 text-sm">
-          First name is required.
-        </div>
-      </div>
-    
-      <!-- Last Name Field -->
-      <div>
-        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
-        <input
-          type="text"
-          id="lastName"
-          [(ngModel)]="lastName"
-          name="lastName"
-          placeholder="Enter your last name"
-          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          required
-          #lastNameInput="ngModel"
-        />
-        <div *ngIf="lastNameInput.invalid && lastNameInput.touched" class="text-red-500 text-sm">
-          Last name is required.
+        <div *ngIf="nameInput.invalid && nameInput.touched" class="text-red-500 text-sm">
+          Name is required.
         </div>
       </div>
     
       <!-- Password Field -->
       <div>
-        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <label for="password" class="input-label">Password</label>
         <input
           type="password"
           id="password"
           [(ngModel)]="password"
           name="password"
           placeholder="Enter your password"
-          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="input-field"
           required
           #passwordInput="ngModel"
         />
@@ -76,14 +71,14 @@
     
       <!-- Confirm Password Field -->
       <div>
-        <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+        <label for="confirmPassword" class="input-label">Confirm Password</label>
         <input
           type="password"
           id="confirmPassword"
           [(ngModel)]="confirmPassword"
           name="confirmPassword"
           placeholder="Confirm your password"
-          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="input-field"
           required
           #confirmPasswordInput="ngModel"
         />
@@ -97,12 +92,12 @@
 
       <!-- User Type Field -->
       <div>
-        <label for="userType" class="block text-sm font-medium text-gray-700">User Type</label>
+        <label for="userType" class="input-label">User Type</label>
         <select
           id="userType"
           [(ngModel)]="userType"
           name="userType"
-          class="w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="input-field"
           required
           #userTypeInput="ngModel"
         >

@@ -1,0 +1,8 @@
+
+.input-field {
+    @apply w-full mt-2 p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+
+.input-label {
+    @apply block text-sm font-medium text-gray-700;
+}
