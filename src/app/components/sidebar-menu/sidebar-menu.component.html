@@ -1,0 +1,12 @@
+<h2 class="text-xl font-bold mb-4">Menu</h2>
+<ul *ngIf="userType == 'hikingClub'">
+    <li class="mb-2">
+        <a routerLink="/create-hiking-tour" class="text-blue-600 hover:text-gray-800">Create Hiking Tour</a>
+    </li>
+</ul>
+
+<ul *ngIf="userType == 'hiker'">
+    <li class="mb-2">
+        <a routerLink="/my-tours" class="text-blue-600 hover:text-gray-800">My Tours</a>
+    </li>
+</ul>

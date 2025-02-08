@@ -8,16 +8,6 @@
 
     <!-- User-specific options -->
     <ng-container *ngIf="user$ | async as user; else loggedOut">
-      <ng-container *ngIf="userType$ | async as userType">
-        <li *ngIf="userType === 'hikingClub'">
-          <a routerLink="/create-hiking-tour" class="text-white hover:text-gray-400">Create Hiking Tour</a>
-        </li>
-      </ng-container>
-      <ng-container *ngIf="userType$ | async as userType">
-        <li *ngIf="userType === 'hiker'">
-          <a routerLink="/my-tours" class="text-white hover:text-gray-400">My Tours</a>
-        </li>
-      </ng-container>
 
       <li><a (click)="goToProfile()" class="text-white hover:text-gray-400">Profile</a></li>
 
