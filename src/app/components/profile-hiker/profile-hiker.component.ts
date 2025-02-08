@@ -14,8 +14,9 @@ import { FormsModule } from '@angular/forms';
 export class ProfileHikerComponent {
   userProfile!: UserData;
   editMode: boolean = false;
-  firstName: string = '';
-  lastName: string = '';
+
+  name!: string;
+  photoString!: string;
 
   constructor(
     private authService: AuthService) {}
@@ -27,8 +28,7 @@ export class ProfileHikerComponent {
         this.userProfile = cUserData;
       }
 
-      this.firstName = this.userProfile.firstName;
-      this.lastName = this.userProfile.lastName;
+      this.name = this.userProfile.name;
     });
   }
 
@@ -37,11 +37,22 @@ export class ProfileHikerComponent {
   }
 
   async saveProfile() {
-    this.userProfile.firstName = this.firstName;
-    this.userProfile.lastName = this.lastName;
+    this.userProfile.name = this.name;
+    this.userProfile.photo = this.photoString;
 
     this.authService.updateUserData(this.userProfile);
 
     this.toggleEditMode();
+  }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.photoString = reader.result as string;
+    };
+
+    reader.readAsDataURL(file);
   }
 }
