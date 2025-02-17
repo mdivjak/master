@@ -6,11 +6,12 @@ import { RouterLink } from '@angular/router';
 import { TourService } from '../../services/tour.service';
 import { SidebarMenuComponent } from "../sidebar-menu/sidebar-menu.component";
 import { AuthService } from '../../services/auth.service';
+import { TourCardComponent } from "../tour-card/tour-card.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, SidebarMenuComponent],
+  imports: [CommonModule, RouterLink, SidebarMenuComponent, TourCardComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
