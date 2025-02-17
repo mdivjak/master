@@ -22,9 +22,13 @@ export class CreateHikingTourComponent {
     difficulty: 'easy',
     participants: 0,
     createdBy: '',
-    createdAt: ''
+    createdAt: '',
+    photo: ''
   };
   gpxFile: File | null = null;
+  gpxData: string | null = null;
+  photoFile: File | null = null;
+  photoData: string | null = null;
 
   constructor(
     private authService: AuthService,
@@ -38,27 +42,58 @@ export class CreateHikingTourComponent {
     }
   }
 
+  onPhotosChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.gpxFile = file;
+    }
+  }
+
+  async readPhotoFile() {
+    if (this.photoFile) {
+      return new Promise<void>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.photoData = reader.result as string;
+          resolve();
+        };
+        reader.readAsText(this.photoFile!);
+      });
+    }
+  }
+
+  async readGpxFile() {
+    if (this.gpxFile) {
+      return new Promise<void>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.gpxData = reader.result as string;
+          resolve();
+        };
+        reader.readAsText(this.gpxFile!);
+      });
+    }
+  }
+
   async onSubmit() {
     if (this.gpxFile) {
       const currentUser = this.authService.currentUser;
       if (currentUser) {
-        const reader = new FileReader();
-        reader.onload = async () => {
-          const gpxContent = reader.result as string;
+        await this.readGpxFile();
 
-          this.tour.gpxContent = gpxContent;
-          this.tour.createdBy = currentUser.uid;
-          this.tour.createdAt = new Date().toISOString();
+        this.tour.gpxContent = this.gpxData!;
+        this.tour.createdBy = currentUser.uid;
+        this.tour.createdAt = new Date().toISOString();
 
-          try {
-            const docRef = await this.tourService.addTour(this.tour);
-            console.log('Tour created with ID:', docRef.id);
-            this.router.navigate(['/']);
-          } catch (error) {
-            console.error('Error adding document:', error);
-          }
-        };
-        reader.readAsText(this.gpxFile);
+        // Read photo files and store results in photoData array
+        await this.readPhotoFile();
+
+        this.tour.photo = this.photoData!;
+
+        // Upload tour
+        const docRef = await this.tourService.addTour(this.tour);
+        console.log('Tour created with ID:', docRef.id);
+
       } else {
         console.error('User is not authenticated');
       }

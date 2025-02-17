@@ -13,4 +13,5 @@ export interface Tour {
     gpxContent: string;
     difficulty: 'easy' | 'moderate' | 'hard';
     participants: number;
+    photo: string;
 }
