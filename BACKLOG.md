@@ -20,7 +20,7 @@
 - [x] login logout
 - [x] editing profile info
 - [x] creating hiking tours
-  - [ ] add photos when creating tours
+  - [x] add photos when creating tours
 - [x] viewing hikers that applied for a tour
 - [x] accepting or declining a tour
   - [x] send a notification to user on status change
