@@ -30,6 +30,8 @@ export class CreateHikingTourComponent {
   photoFile: File | null = null;
   photoData: string | null = null;
 
+  message = '';
+
   constructor(
     private authService: AuthService,
     private tourService: TourService,
@@ -75,30 +77,62 @@ export class CreateHikingTourComponent {
     }
   }
 
-  async onSubmit() {
-    if (this.gpxFile) {
-      const currentUser = this.authService.currentUser;
-      if (currentUser) {
-        await this.readGpxFile();
-
-        this.tour.gpxContent = this.gpxData!;
-        this.tour.createdBy = currentUser.uid;
-        this.tour.createdAt = new Date().toISOString();
-
-        // Read photo files and store results in photoData array
-        await this.readPhotoFile();
-
-        this.tour.photo = this.photoData!;
-
-        // Upload tour
-        const docRef = await this.tourService.addTour(this.tour);
-        console.log('Tour created with ID:', docRef.id);
-
-      } else {
-        console.error('User is not authenticated');
-      }
-    } else {
-      console.error('GPX file is required');
+  validate(): boolean {
+    this.message = '';
+    
+    if (!this.tour.name) {
+      this.message = 'Name is required';
+      return false;
     }
+
+    if (!this.tour.date) {
+      this.message = 'Date is required';
+      return false;
+    }
+
+    if (!this.tour.description) {
+      this.message = 'Description is required';
+      return false;
+    }
+
+    if (!this.gpxFile) {
+      this.message = 'GPX file is required';
+      return false;
+    }
+
+    if (!this.photoFile) {
+      this.message = 'Photo file is required';
+      return false;
+    }
+
+    if (!this.tour.difficulty) {
+      this.message = 'Difficulty is required';
+      return false;
+    }
+
+    if (this.tour.participants < 0) {
+      this.message = 'Participants must be a positive number';
+      return false;
+    }
+
+    return true;
+  }
+
+  async onSubmit() {
+    this.validate();
+
+    const currentUser = this.authService.currentUser;
+
+    await this.readGpxFile();
+    await this.readPhotoFile();
+
+    this.tour.gpxContent = this.gpxData!;
+    this.tour.photo = this.photoData!;
+    this.tour.createdBy = currentUser!.uid;
+    this.tour.createdAt = new Date().toISOString();
+
+    // Upload tour
+    const docRef = await this.tourService.addTour(this.tour);
+    console.log('Tour created with ID:', docRef.id);
   }
 }
