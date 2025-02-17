@@ -47,7 +47,7 @@ export class CreateHikingTourComponent {
   onPhotosChange(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.gpxFile = file;
+      this.photoFile = file;
     }
   }
 
@@ -59,7 +59,7 @@ export class CreateHikingTourComponent {
           this.photoData = reader.result as string;
           resolve();
         };
-        reader.readAsText(this.photoFile!);
+        reader.readAsDataURL(this.photoFile!);
       });
     }
   }
@@ -119,7 +119,7 @@ export class CreateHikingTourComponent {
   }
 
   async onSubmit() {
-    this.validate();
+    if (!this.validate()) return;
 
     const currentUser = this.authService.currentUser;
 

@@ -8,18 +8,28 @@
   <div class="w-3/4 p-4">
     <h1 class="text-2xl font-bold mb-4">Hiking Tours</h1>
     <ul>
-      <li *ngFor="let tour of tours$ | async" class="mb-4 p-4 border rounded shadow">
-        <h2 class="text-xl font-semibold">{{ tour.name }}</h2>
-        <p><strong>Date:</strong> {{ tour.date }}</p>
-        <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
-        <p><strong>Participants:</strong> {{ tour.participants }}</p>
-        <p><strong>Organized By:</strong> {{ tour.createdByName }}</p>
-        <button
-          class="mt-2 py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          [routerLink]="['/tour-details', tour.id]"
-        >
-          View Details
-      </button>
+      <li *ngFor="let tour of tours$ | async" class="flex mb-4 p-4 border rounded shadow hover:border-2" [routerLink]="['/tour-details', tour.id]">
+        <div>
+          <h2 class="text-xl font-semibold">{{ tour.name }}</h2>
+          <p><strong>Date:</strong> {{ tour.date }}</p>
+          <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
+          <p><strong>Participants:</strong> {{ tour.participants }}</p>
+          <p><strong>Organized By:</strong> {{ tour.createdByName }}</p>
+        </div>
+        
+        <div class="flex-grow"></div>
+
+        <!-- <div>
+          <button
+            class="mt-2 py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [routerLink]="['/tour-details', tour.id]"
+          >
+            View Details
+          </button>
+        </div> -->
+
+        <img *ngIf="tour.photo" [src]="tour.photo" alt="{{ tour.name }} photo" class="w-auto h-36 mb-4 rounded" style="object-fit: cover;">
+
       </li>
     </ul>
   </div>
