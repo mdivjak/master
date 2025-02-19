@@ -14,6 +14,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   private userTypeSubject = new BehaviorSubject<string | null>(null);
   private userDataSubject = new BehaviorSubject<UserData | null>(null);
+  private _currentUserData: UserData | null = null;
 
   constructor() {
     onAuthStateChanged(this.auth, async (user) => {
@@ -21,6 +22,7 @@ export class AuthService {
         const userDoc = await getDoc(doc(this.firestore, 'users', user.uid));
         
         const userData = userDoc.data() as UserData;
+        this._currentUserData = userData;
         this.userDataSubject.next(userData);
 
         const userType = userData?.type ?? null;
@@ -42,6 +44,10 @@ export class AuthService {
 
   get userData$() {
     return this.userDataSubject.asObservable();
+  }
+
+  get currentUserData() {
+    return this._currentUserData;
   }
 
   get currentUser() {

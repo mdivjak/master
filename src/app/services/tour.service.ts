@@ -63,19 +63,31 @@ export class TourService {
     return addDoc(collection(this.firestore, 'tours'), tour);
   }
 
-  async applyForTour(tourId: string, tourOwner: string, userId: string): Promise<void> {
+  async applyForTour(tourId: string, tourName: string, tourOwner: string, userId: string, userName: string): Promise<void> {
+    // Check if tourId or userId is invalid
     if (!tourId || !userId) {
       throw new Error('Invalid tourId or userId');
     }
+
+    // Reference to the participant's application document in Firestore
     const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
+    // Fetch the participant's application document
     const participantDoc = await getDoc(participantRef);
+    
+    // If the application does not exist, create a new application
     if (!participantDoc.exists()) {
       await setDoc(participantRef, {
         status: 'pending',
         appliedAt: new Date().toISOString()
       });
-      await this.notificationService.sendNotification(tourOwner, 'application', 'User applied for a tour!');
+      // Send a notification to the tour owner about the new application
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString();
+      const formattedTime = currentDate.toLocaleTimeString();
+      const notificationMessage = `User ${userName} applied for tour ${tourName} on ${formattedDate} at ${formattedTime}`;
+      await this.notificationService.sendNotification(tourOwner, 'application', notificationMessage);
     } else {
+      // If the user has already applied, throw an error
       throw new Error('You have already applied for this tour.');
     }
   }
