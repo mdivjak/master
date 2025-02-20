@@ -1,17 +1,42 @@
-export interface Application {
-    status: 'pending' | 'accepted' | 'declined' | 'canceled';
-    appliedAt: string; // Timestamp of when the participant applied
-}
   
 export interface Tour {
     id?: string;
-    createdBy: string; // User ID of the hiking club that created the tour
-    createdAt: string; // Timestamp of when the tour was created
+
+    clubId: string;
+    clubName: string;
+    clubPhoto: string;
+
     name: string;
     date: string;
-    description: string;
-    gpxContent: string;
     difficulty: 'easy' | 'moderate' | 'hard';
-    participants: number;
+    status: 'upcoming' | 'completed' | 'canceled';
+    gpxContent: string;
+    description: string;
+    maxParticipants: number;
+
+    participantsIds: string[];
+    participantsNames: string[];
+    participantsPhotos: string[];
+
     photo: string;
+}
+
+export interface Application {
+    userId: string;
+    userName: string;
+    userPhoto: string;
+
+    status: 'pending' | 'accepted' | 'declined' | 'canceled';
+    timestamp: string;
+    declinedMessage: string;
+}
+
+export interface Review {
+    userId: string;
+    userName: string;
+    userPhoto: string;
+    
+    review: string;
+    rating: number;
+    timestamp: string;
 }

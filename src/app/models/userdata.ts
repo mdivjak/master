@@ -1,15 +1,6 @@
 export interface UserData {
-    email: string;
     name: string;
+    email: string;
+    type: string;
     photo: string;
-    type: string;
-    notifications: Notification[];
-}
-
-export interface Notification {
-    type: string;
-    message: string;
-    read: boolean;
-    date: Date;
-    createdAt: string;
 }
