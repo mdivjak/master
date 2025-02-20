@@ -24,23 +24,13 @@ export class ProfileClubComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router,
     private tourService: TourService) {}
 
-  ngOnInit() {
-    const currentUser = this.authService.currentUser;
-    if(!currentUser) {
-      this.router.navigate(['/login']);
-    }
+  async ngOnInit() {
+    this.clubProfile = this.authService.currentUserData!;
 
-    this.authService.userData$.subscribe(async userData => {
-      const cUserData = userData;
-      if(cUserData) {
-        this.clubProfile = cUserData;
-        this.name = this.clubProfile.name;
-        this.tours = await this.tourService.loadTours(currentUser!.uid);
-      }
-    });
+    let tours = await this.tourService.getClubTours(this.authService.currentUser!.uid);
+    console.log(tours);
   }
 
   toggleEditMode() {
@@ -48,14 +38,13 @@ export class ProfileClubComponent {
   }
 
   async saveProfile() {
-    if(this.clubProfile) {
-      this.clubProfile.name = this.name;
-      this.clubProfile.photo = this.photoString;
-  
-      this.authService.updateUserData(this.clubProfile);
-  
-      this.toggleEditMode();
-    }
+    this.clubProfile.name = this.name;
+    this.clubProfile.photo = this.photoString;
+
+    this.authService.updateUser(this.authService.currentUser!.uid, this.clubProfile.name, this.clubProfile.photo);
+    //this.authService.updateUserData(this.clubProfile);
+
+    this.toggleEditMode();
   }
 
   onFileSelected(event: any) {

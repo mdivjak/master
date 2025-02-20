@@ -42,7 +42,7 @@
         <h3 class="text-lg font-semibold">{{ tour.name }}</h3>
         <p><strong>Date:</strong> {{ tour.date }}</p>
         <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
-        <p><strong>Participants:</strong> {{ tour.participants }}</p>
+        <p><strong>Participants:</strong> {{ tour.maxParticipants }}</p>
         <button [routerLink]="['/tour-participants', tour.id]" class="bg-blue-500 text-white px-4 py-2 rounded mt-2">View Participants</button>
       </li>
     </ul>
