@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TourService } from '../../services/tour.service';
 import { Tour } from '../../models/tour';
-import { UserService } from '../../services/user.service';
 import { NgFor, NgIf } from '@angular/common';
 import { NotificationService } from '../../services/notification.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-tour-participants',
@@ -20,8 +20,8 @@ export class TourParticipantsComponent {
 
   constructor(
     private route: ActivatedRoute,
+    private authService: AuthService,
     private tourService: TourService,
-    private userService: UserService,
     private notificationService: NotificationService,
     private router: Router
   ) {}
@@ -58,7 +58,7 @@ export class TourParticipantsComponent {
 
   async processApplication(applications: any) {
     for (let application of applications) {
-      const userData = await this.userService.loadUserData(application.id);
+      const userData = await this.authService.getUserData(application.id);
       application.userData = userData;
     }
     return applications;

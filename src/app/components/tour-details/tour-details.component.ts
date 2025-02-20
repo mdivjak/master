@@ -73,7 +73,7 @@ export class TourDetailsComponent {
   async applyForTour() {
     const currentUser = this.authService.currentUser;
     if (currentUser) {
-      await this.tourService.applyForTour(this.tour.id!, this.tour.name,  this.tour.createdBy, currentUser.uid, this.authService.currentUserData?.name!);
+      await this.tourService.applyForTour(this.tour.id!, currentUser.uid, this.authService.currentUserData?.name!, this.authService.currentUserData?.photo!);
       this.hasApplied = true;
     } else {
       this.router.navigate(['/']);

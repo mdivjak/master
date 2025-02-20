@@ -7,7 +7,7 @@
       <p><strong>Date:</strong> {{ tour.date }}</p>
       <p><strong>Description:</strong> {{ tour.description }}</p>
       <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
-      <p><strong>Participants:</strong> {{ tour.participants }}</p>
+      <p><strong>Participants:</strong> {{ tour.maxParticipants }}</p>
       <app-map [gpxContent]="tour.gpxContent" class="mt-2"></app-map>
     </div>
   </div>
