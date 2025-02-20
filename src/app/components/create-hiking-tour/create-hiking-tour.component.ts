@@ -15,18 +15,29 @@ import { Router } from '@angular/router';
 })
 export class CreateHikingTourComponent {
   tour: Tour = {
+    clubId: '',
+    clubName: '',
+    clubPhoto: '',
+
     name: '',
     date: '',
-    description: '',
-    gpxContent: '',
     difficulty: 'easy',
-    participants: 0,
-    createdBy: '',
-    createdAt: '',
+    status: 'upcoming',
+    
+    gpxContent: '',
+    
+    description: '',
+    maxParticipants: 0,
+    participantsIds: [],
+    participantsNames: [],
+    participantsPhotos: [],
+
     photo: ''
   };
+
   gpxFile: File | null = null;
   gpxData: string | null = null;
+
   photoFile: File | null = null;
   photoData: string | null = null;
 
@@ -52,29 +63,25 @@ export class CreateHikingTourComponent {
   }
 
   async readPhotoFile() {
-    if (this.photoFile) {
-      return new Promise<void>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.photoData = reader.result as string;
-          resolve();
-        };
-        reader.readAsDataURL(this.photoFile!);
-      });
-    }
+    return new Promise<void>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.photoData = reader.result as string;
+        resolve();
+      };
+      reader.readAsDataURL(this.photoFile!);
+    });
   }
 
   async readGpxFile() {
-    if (this.gpxFile) {
-      return new Promise<void>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.gpxData = reader.result as string;
-          resolve();
-        };
-        reader.readAsText(this.gpxFile!);
-      });
-    }
+    return new Promise<void>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.gpxData = reader.result as string;
+        resolve();
+      };
+      reader.readAsText(this.gpxFile!);
+    });
   }
 
   validate(): boolean {
@@ -110,7 +117,7 @@ export class CreateHikingTourComponent {
       return false;
     }
 
-    if (this.tour.participants < 0) {
+    if (this.tour.maxParticipants < 0) {
       this.message = 'Participants must be a positive number';
       return false;
     }
@@ -122,17 +129,22 @@ export class CreateHikingTourComponent {
     if (!this.validate()) return;
 
     const currentUser = this.authService.currentUser;
+    const currentUserData = this.authService.currentUserData;
 
     await this.readGpxFile();
     await this.readPhotoFile();
 
     this.tour.gpxContent = this.gpxData!;
     this.tour.photo = this.photoData!;
-    this.tour.createdBy = currentUser!.uid;
-    this.tour.createdAt = new Date().toISOString();
+
+    this.tour.clubId = currentUser!.uid;
+    this.tour.clubName = currentUserData!.name;
+    this.tour.clubPhoto = currentUserData!.photo;
+
+    this.tour.date = new Date().toISOString();
 
     // Upload tour
-    const docRef = await this.tourService.addTour(this.tour);
+    const docRef = await this.tourService.createTour(this.tour);
     console.log('Tour created with ID:', docRef.id);
   }
 }
