@@ -3,6 +3,7 @@ import { UserData } from '../../models/userdata';
 import { AuthService } from '../../services/auth.service';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ImageUtils } from '../../utils/image-utils';
 
 @Component({
   selector: 'app-profile-hiker',
@@ -13,46 +14,38 @@ import { FormsModule } from '@angular/forms';
 })
 export class ProfileHikerComponent {
   userProfile!: UserData;
-  editMode: boolean = false;
 
-  name!: string;
+  editMode: boolean = false;
+  name: string = '';
+  photoFile: File | null = null;
   photoString!: string;
 
   constructor(
     private authService: AuthService) {}
 
   async ngOnInit(): Promise<void> {
-    this.authService.userData$.subscribe(userData => {
-      const cUserData = userData;
-      if(cUserData) {
-        this.userProfile = cUserData;
-      }
-
-      this.name = this.userProfile.name;
-    });
+    this.userProfile = this.authService.currentUserData!;
   }
 
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
 
-  async saveProfile() {
-    this.userProfile.name = this.name;
-    this.userProfile.photo = this.photoString;
-
-    this.authService.updateUserData(this.userProfile);
-
-    this.toggleEditMode();
+  onFileSelected(event: any) {
+    this.photoFile = event.target.files[0];
   }
 
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
+  async saveProfile() {
+    if(this.name != '' && this.name != undefined)
+      this.userProfile.name = this.name;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.photoString = reader.result as string;
-    };
+    if(this.photoFile != null) {
+      this.photoString = await ImageUtils.readAndResizeImage(this.photoFile, 200, 200) as string;
+      this.userProfile.photo = this.photoString;
+    }
 
-    reader.readAsDataURL(file);
+    this.authService.updateUser(this.authService.currentUser!.uid, this.userProfile.name, this.userProfile.photo);
+
+    this.toggleEditMode();
   }
 }
