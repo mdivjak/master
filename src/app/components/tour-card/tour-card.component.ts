@@ -11,5 +11,4 @@ import { NgIf } from '@angular/common';
 })
 export class TourCardComponent {
 @Input() tour!: Tour;
-@Input() createdByName?: string;
 }

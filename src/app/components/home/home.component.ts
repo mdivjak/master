@@ -17,20 +17,18 @@ import { TourCardComponent } from "../tour-card/tour-card.component";
 })
 export class HomeComponent implements OnInit {
   userType!: string | null;
-  tours$: Observable<(Tour & { createdByName: string })[]>;
   tours: Tour[] = [];
 
   constructor(
     private authService: AuthService,
     private tourService: TourService) {
-    this.tours$ = this.tourService.getTours();
 
     this.authService.userType$.subscribe((userType) => {
       this.userType = userType;
     });
-
-    console.log(this.tourService.getAllTours());
   }
 
-  ngOnInit(): void {}
+  async ngOnInit() {
+    this.tours = await this.tourService.getAllTours();
+  }
 }

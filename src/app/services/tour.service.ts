@@ -27,9 +27,8 @@ export class TourService {
 
   async getAllTours() {
     const toursCollection = collection(this.firestore, 'tours');
-    const q = query(toursCollection, orderBy('date', 'desc'));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const querySnapshot = await getDocs(toursCollection);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Tour));
   }
   
   async getClubTours(clubId: string) {

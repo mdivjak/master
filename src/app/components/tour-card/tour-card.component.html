@@ -4,7 +4,7 @@
       <p><strong>Date:</strong> {{ tour.date }}</p>
       <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
       <p><strong>Participants:</strong> {{ tour.maxParticipants }}</p>
-      <p *ngIf="createdByName != ''"><strong>Organized By:</strong> {{ createdByName }}</p>
+      <p *ngIf="tour.clubName"><strong>Organized By:</strong> {{ tour.clubName }}</p>
     </div>
     
     <div class="flex-grow"></div>

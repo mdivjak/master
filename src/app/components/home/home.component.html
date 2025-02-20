@@ -8,7 +8,7 @@
   <div class="w-3/4 p-4">
     <h1 class="text-2xl font-bold mb-4">Hiking Tours</h1>
     <ul>
-      <app-tour-card *ngFor="let tour of tours$ | async" [tour]="tour" [createdByName]="tour.createdByName" [routerLink]="['/tour-details', tour.id]"/>
+      <app-tour-card *ngFor="let tour of tours" [tour]="tour" [routerLink]="['/tour-details', tour.id]"/>
     </ul>
   </div>
 
