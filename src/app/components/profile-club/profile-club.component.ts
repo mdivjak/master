@@ -6,6 +6,7 @@ import { Tour } from '../../models/tour';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TourService } from '../../services/tour.service';
+import { ImageUtils } from '../../utils/image-utils';
 
 @Component({
   selector: 'app-profile-club',
@@ -19,7 +20,8 @@ export class ProfileClubComponent {
   tours!: Tour[];
 
   editMode: boolean = false;
-  name!: string;
+  name: string = '';
+  photoFile: File | null = null;
   photoString!: string;
 
   constructor(
@@ -28,33 +30,28 @@ export class ProfileClubComponent {
 
   async ngOnInit() {
     this.clubProfile = this.authService.currentUserData!;
-
-    let tours = await this.tourService.getClubTours(this.authService.currentUser!.uid);
-    console.log(tours);
+    this.tours = await this.tourService.getClubTours(this.authService.currentUser!.uid);
   }
 
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
 
-  async saveProfile() {
-    this.clubProfile.name = this.name;
-    this.clubProfile.photo = this.photoString;
-
-    this.authService.updateUser(this.authService.currentUser!.uid, this.clubProfile.name, this.clubProfile.photo);
-    //this.authService.updateUserData(this.clubProfile);
-
-    this.toggleEditMode();
+  onFileSelected(event: any) {
+    this.photoFile = event.target.files[0];
   }
 
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
+  async saveProfile() {
+    if(this.name != '' && this.name != undefined)
+      this.clubProfile.name = this.name;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.photoString = reader.result as string;
-    };
+    if(this.photoFile != null) {
+      this.photoString = await ImageUtils.readAndResizeImage(this.photoFile, 200, 200) as string;
+      this.clubProfile.photo = this.photoString;
+    }
 
-    reader.readAsDataURL(file);
+    this.authService.updateUser(this.authService.currentUser!.uid, this.clubProfile.name, this.clubProfile.photo);
+
+    this.toggleEditMode();
   }
 }

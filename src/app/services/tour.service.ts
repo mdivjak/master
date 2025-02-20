@@ -35,7 +35,7 @@ export class TourService {
     const toursCollection = collection(this.firestore, 'tours');
     const q = query(toursCollection, where('clubId', '==', clubId));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Tour));
   }
 
   // APPLICATIONS SECTION
