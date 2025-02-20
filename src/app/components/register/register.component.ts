@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { UserData } from '../../models/userdata';
 
 @Component({
   selector: 'app-register',
@@ -41,7 +42,12 @@ export class RegisterComponent {
       return;
     }
 
-    this.loadPhoto();
+    try {
+      await this.loadPhoto();
+    } catch (error) {
+      this.invalidPhoto = true;
+      return;
+    }
 
     if(this.photoString == undefined) {
       this.invalidPhoto = true;
@@ -50,7 +56,14 @@ export class RegisterComponent {
 
     this.isLoading = true; // Show loading spinner
 
-    await this.authService.register(this.photoString, this.email, this.password, this.name, this.userType);
+    let userData: UserData = {
+      name: this.name,
+      email: this.email,
+      type: this.userType,
+      photo: this.photoString
+    };
+
+    await this.authService.register(userData, this.password);
 
     this.invalidPhoto = false;
     this.isLoading = false; // Hide loading spinner
@@ -63,13 +76,21 @@ export class RegisterComponent {
     }
   }
 
-  loadPhoto() {
-    if(this.profilePhoto == undefined)
-      throw new Error("Profile photo is not set!");
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.photoString = reader.result as string;
-    };
-    reader.readAsDataURL(this.profilePhoto);
+  loadPhoto(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if(this.profilePhoto == undefined) {
+        reject(new Error("Profile photo is not set!"));
+        return;
+      }
+  
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.photoString = reader.result as string;
+        resolve();
+      };
+      reader.onerror = reject;
+  
+      reader.readAsDataURL(this.profilePhoto);
+    });
   }
 }
