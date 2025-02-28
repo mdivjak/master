@@ -138,24 +138,6 @@ export class TourService {
 
   // END OF REFACTORING METHODS
 
-  async getToursUserAppliedFor(userId: string): Promise<Tour[]> {
-    const toursRef = collection(this.firestore, 'tours') as CollectionReference;
-    const toursSnapshot = await firstValueFrom(collectionData(toursRef, { idField: 'id' }));
-    const appliedTours: any[] = [];
-    for (const tour of toursSnapshot as Tour[]) {
-      const applicationsRef = doc(this.firestore, `tours/${tour.id}/applications/${userId}`);
-      const userApplication = await getDoc(applicationsRef);
-
-      if (userApplication.exists()) {
-        const reviewRef = doc(this.firestore, `tours/${tour.id}/reviews/${userId}`);
-        const userReview = await getDoc(reviewRef);
-        appliedTours.push({ id: tour.id, ...tour, application: userApplication.data(),  hasReviewed: userReview.exists() });
-      }
-    }
-
-    return appliedTours;
-  }
-
   async saveReview(tourId: string, userId: string, review: string, rating: number): Promise<void> {
     const reviewRef = doc(this.firestore, `tours/${tourId}/reviews/${userId}`);
     await setDoc(reviewRef, {

@@ -33,7 +33,7 @@ export class MyToursComponent {
 
   async loadToursUserAppliedFor() {
     if (this.authService.currentUser) {
-      this.tours = await this.tourService.getToursUserAppliedFor(this.authService.currentUser.uid);
+      this.tours = await this.tourService.getUserAcceptedTours(this.authService.currentUser.uid);
     }
   }
 
