@@ -12,7 +12,7 @@ export class TourService {
 
   private firestore = inject(Firestore);
 
-  constructor(private notificationService: NotificationService) { }
+  constructor() { }
 
   // REFACTORING METHODS
   async createTour(tour: Tour) {
@@ -135,18 +135,5 @@ export class TourService {
   async markNotificationAsRead(userId: string, notificationId: string) {
     await updateDoc(doc(this.firestore, `users/${userId}/notifications`, notificationId), { read: true });
   }
-
-  // END OF REFACTORING METHODS
-
-  // async saveReview(tourId: string, userId: string, review: string, rating: number): Promise<void> {
-  //   const reviewRef = doc(this.firestore, `tours/${tourId}/reviews/${userId}`);
-  //   await setDoc(reviewRef, {
-  //     userId: userId,
-  //     review: review,
-  //     rating: rating,
-  //     date: new Date().toISOString()
-  //   });
-  // }
-
 
 }
