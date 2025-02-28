@@ -70,7 +70,7 @@ export class TourDetailsComponent {
   }
 
   async checkIfUserHasApplied(tourId: string, userId: string): Promise<boolean> {
-    return this.tourService.hasUserApplied(tourId, userId);
+    return this.tourService.getUserApplication(tourId, userId) !== null;
   }
 
 }

@@ -138,96 +138,11 @@ export class TourService {
 
   // END OF REFACTORING METHODS
 
-
-  async loadTours(userId: string) {
-    const toursCollection = collection(this.firestore, 'tours');
-    const q = query(toursCollection, where('createdBy', '==', userId));
-    const querySnapshot = await getDocs(q);
-    const tours = querySnapshot.docs.map(doc => {
-      const tour = doc.data() as Tour;
-      tour.id = doc.id;
-      return tour;
-    });
-    return tours;
-  }
-
-  getTours() {
-    const toursCollection = collection(this.firestore, 'tours');
-    let tours$ = collectionData(toursCollection, { idField: 'id' }).pipe(
-      switchMap((tours: Tour[]) => {
-        if (tours.length === 0) {
-          return of([]);
-        }
-
-        const userObservables = tours.map(tour =>
-          getDoc(doc(this.firestore, 'users', tour.clubId)).then(userDoc => ({
-            ...tour,
-            createdByName: userDoc.exists() ? userDoc.data()?.['firstName'] : 'Unknown'
-          }))
-        );
-
-        return combineLatest(userObservables);
-      })
-    ) as Observable<(Tour & { createdByName: string })[]>;
-
-    return tours$;
-  }
-
-  async addTour(tour: Tour) {
-    return addDoc(collection(this.firestore, 'tours'), tour);
-  }
-
-  async applyForTour2(tourId: string, tourName: string, tourOwner: string, userId: string, userName: string): Promise<void> {
-    // Check if tourId or userId is invalid
-    if (!tourId || !userId) {
-      throw new Error('Invalid tourId or userId');
-    }
-
-    // Reference to the participant's application document in Firestore
-    const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
-    // Fetch the participant's application document
-    const participantDoc = await getDoc(participantRef);
-    
-    // If the application does not exist, create a new application
-    if (!participantDoc.exists()) {
-      await setDoc(participantRef, {
-        status: 'pending',
-        appliedAt: new Date().toISOString()
-      });
-      // Send a notification to the tour owner about the new application
-      const currentDate = new Date();
-      const formattedDate = currentDate.toLocaleDateString();
-      const formattedTime = currentDate.toLocaleTimeString();
-      const notificationMessage = `User ${userName} applied for tour ${tourName} on ${formattedDate} at ${formattedTime}`;
-      await this.notificationService.sendNotification(tourOwner, 'application', notificationMessage);
-    } else {
-      // If the user has already applied, throw an error
-      throw new Error('You have already applied for this tour.');
-    }
-  }
-
-  async updateApplicationStatus2(tourId: string, userId: string, status: 'accepted' | 'rejected'): Promise<void> {
-    if (!tourId || !userId) {
-      throw new Error('Invalid tourId or userId');
-    }
-    const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
-    const participantDoc = await getDoc(participantRef);
-    if (participantDoc.exists()) {
-      await setDoc(participantRef, {
-        status: status,
-        updatedAt: new Date().toISOString()
-      });
-      await this.notificationService.sendNotification(userId, 'statusUpdate', `Your application for the tour has been ${status}`);
-    } else {
-      throw new Error('User has not applied for this tour.');
-    }
-  }
-
-  async hasUserApplied(tourId: string, userId: string): Promise<boolean> {
-    const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
-    const participantDoc = await getDoc(participantRef);
-    return participantDoc.exists();
-  }
+  // async hasUserApplied(tourId: string, userId: string): Promise<boolean> {
+  //   const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
+  //   const participantDoc = await getDoc(participantRef);
+  //   return participantDoc.exists();
+  // }
 
   async loadAllApplications(tourId: string): Promise<any[]> {
     const applicationsCollection = collection(this.firestore, `tours/${tourId}/applications`);
