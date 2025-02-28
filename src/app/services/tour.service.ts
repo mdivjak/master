@@ -138,34 +138,6 @@ export class TourService {
 
   // END OF REFACTORING METHODS
 
-  // async hasUserApplied(tourId: string, userId: string): Promise<boolean> {
-  //   const participantRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
-  //   const participantDoc = await getDoc(participantRef);
-  //   return participantDoc.exists();
-  // }
-
-  async loadAllApplications(tourId: string): Promise<any[]> {
-    const applicationsCollection = collection(this.firestore, `tours/${tourId}/applications`);
-    const applicationsSnapshot = await getDocs(applicationsCollection);
-    const applications = applicationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return applications;
-  }
-
-  rejectApplication(tourId: string, applicationId: string) {
-    const applicationRef = doc(this.firestore, `tours/${tourId}/applications/${applicationId}`);
-    return setDoc(applicationRef, { status: 'rejected'}, { merge: true });
-  }
-
-  acceptApplication(tourId: string, applicationId: any) {
-    const applicationRef = doc(this.firestore, `tours/${tourId}/applications/${applicationId}`);
-    return setDoc(applicationRef, { status: 'accepted'}, { merge: true });
-  }
-
-  cancelApplication(tourId: string, applicationId: any) {
-    const applicationRef = doc(this.firestore, `tours/${tourId}/applications/${applicationId}`);
-    return setDoc(applicationRef, { status: 'canceled'}, { merge: true });
-  }
-
   async getToursUserAppliedFor(userId: string): Promise<Tour[]> {
     const toursRef = collection(this.firestore, 'tours') as CollectionReference;
     const toursSnapshot = await firstValueFrom(collectionData(toursRef, { idField: 'id' }));

@@ -27,7 +27,7 @@ export class MyToursComponent {
   }
 
   cancelApplication(tourId: string) {
-    this.tourService.cancelApplication(tourId, this.authService.currentUser?.uid);
+    this.tourService.updateApplicationStatus(tourId, this.authService.currentUser?.uid!, "canceled", "");
     this.loadToursUserAppliedFor();
   }
 

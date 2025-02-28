@@ -48,7 +48,7 @@ export class TourParticipantsComponent {
 
   async loadApplications() {
     if(this.tour.id) {
-      let applications = await this.tourService.loadAllApplications(this.tour.id);
+      let applications = await this.tourService.getTourApplications(this.tour.id);
       applications = await this.processApplication(applications);
       return applications;
     } else {
@@ -65,13 +65,13 @@ export class TourParticipantsComponent {
   }
 
   async rejectApplication(application: any) {
-    await this.tourService.rejectApplication(this.tourId, application.id);
+    await this.tourService.updateApplicationStatus(this.tourId, application.id, "declined", "");
     this.notificationService.sendNotification(application.id, 'statusUpdate', `Your application for ${this.tour.name} has been rejected`);
     this.applications = await this.loadApplications();
   }
 
   async acceptApplication(application: any) {
-    await this.tourService.acceptApplication(this.tourId, application.id);
+    await this.tourService.updateApplicationStatus(this.tourId, application.id, "accepted", "");
     this.notificationService.sendNotification(application.id, 'statusUpdate', `Your application for ${this.tour.name} has been accepted`);
     this.applications = await this.loadApplications();
   }
