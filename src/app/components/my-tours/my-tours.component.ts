@@ -3,6 +3,7 @@ import { TourService } from '../../services/tour.service';
 import { AuthService } from '../../services/auth.service';
 import { NgFor, NgIf } from '@angular/common';
 import { ReviewModalComponent } from "../review-modal/review-modal.component";
+import { Review } from '../../models/tour';
 
 @Component({
   selector: 'app-my-tours',
@@ -52,7 +53,15 @@ export class MyToursComponent {
 
   async handleReviewSubmission(event: { tourId: string, review: string, rating: number }) {
     if (this.authService.currentUser) {
-      await this.tourService.saveReview(event.tourId, this.authService.currentUser.uid, event.review, event.rating);
+      let review: Review = {
+        userId: this.authService.currentUser.uid,
+        review: event.review,
+        rating: event.rating,
+        userName: this.authService.currentUser.displayName!,
+        userPhoto: this.authService.currentUser.photoURL!,
+        timestamp: new Date().toISOString()
+      };
+      await this.tourService.createReview(event.tourId, review);
       this.loadToursUserAppliedFor();
     }
     this.closeReviewModal();

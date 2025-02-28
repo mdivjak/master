@@ -138,15 +138,15 @@ export class TourService {
 
   // END OF REFACTORING METHODS
 
-  async saveReview(tourId: string, userId: string, review: string, rating: number): Promise<void> {
-    const reviewRef = doc(this.firestore, `tours/${tourId}/reviews/${userId}`);
-    await setDoc(reviewRef, {
-      userId: userId,
-      review: review,
-      rating: rating,
-      date: new Date().toISOString()
-    });
-  }
+  // async saveReview(tourId: string, userId: string, review: string, rating: number): Promise<void> {
+  //   const reviewRef = doc(this.firestore, `tours/${tourId}/reviews/${userId}`);
+  //   await setDoc(reviewRef, {
+  //     userId: userId,
+  //     review: review,
+  //     rating: rating,
+  //     date: new Date().toISOString()
+  //   });
+  // }
 
 
 }
