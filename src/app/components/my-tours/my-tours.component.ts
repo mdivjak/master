@@ -3,7 +3,7 @@ import { TourService } from '../../services/tour.service';
 import { AuthService } from '../../services/auth.service';
 import { NgFor, NgIf } from '@angular/common';
 import { ReviewModalComponent } from "../review-modal/review-modal.component";
-import { Review } from '../../models/tour';
+import { Review, Tour } from '../../models/tour';
 
 @Component({
   selector: 'app-my-tours',
@@ -13,29 +13,26 @@ import { Review } from '../../models/tour';
   styleUrl: './my-tours.component.css'
 })
 export class MyToursComponent {
-  tours: any[] = [];
+  tours: Tour[] = [];
   showReviewModal: boolean = false;
   selectedTourId!: string;
 
-  constructor(private tourService: TourService, private authService: AuthService) {}
+  constructor(
+    private tourService: TourService,
+    private authService: AuthService) {}
 
   async ngOnInit(): Promise<void> {
-    this.authService.user$.subscribe(async (user) => {
-      if (user) {
-        this.loadToursUserAppliedFor();
-      }
-    });
+    this.getUserAppliedTours();
+    console.log(this.tours);
+  }
+
+  async getUserAppliedTours() {
+    this.tours = await this.tourService.getUserAppliedTours(this.authService.currentUser!.uid) as Tour[];
   }
 
   cancelApplication(tourId: string) {
     this.tourService.updateApplicationStatus(tourId, this.authService.currentUser?.uid!, "canceled", "");
-    this.loadToursUserAppliedFor();
-  }
-
-  async loadToursUserAppliedFor() {
-    if (this.authService.currentUser) {
-      this.tours = await this.tourService.getUserAcceptedTours(this.authService.currentUser.uid);
-    }
+    this.getUserAppliedTours();
   }
 
   openReviewModal(tourId: string) {
@@ -62,7 +59,7 @@ export class MyToursComponent {
         timestamp: new Date().toISOString()
       };
       await this.tourService.createReview(event.tourId, review);
-      this.loadToursUserAppliedFor();
+      this.getUserAppliedTours();
     }
     this.closeReviewModal();
   }

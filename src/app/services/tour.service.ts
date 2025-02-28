@@ -97,7 +97,7 @@ export class TourService {
   //   return tourSnapshot.exists() ? tourSnapshot.data()?.['participants'] || [] : [];
   // }
   
-  async getUserAcceptedTours(userId: string) {
+  async getUserAppliedTours(userId: string) {
     // ne radi zato sto club id nije u participants nego u objektu
     //throw Error('Not implemented');
     const toursCollection = collection(this.firestore, 'tours');
