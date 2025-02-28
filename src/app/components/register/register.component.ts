@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { UserData } from '../../models/userdata';
+import { ImageUtils } from '../../utils/image-utils';
 
 @Component({
   selector: 'app-register',
@@ -42,19 +43,15 @@ export class RegisterComponent {
       return;
     }
 
-    try {
-      await this.loadPhoto();
-    } catch (error) {
-      this.invalidPhoto = true;
-      return;
-    }
+    this.photoString = await ImageUtils.readAndResizeImage(this.profilePhoto, 200, 200);
 
     if(this.photoString == undefined) {
       this.invalidPhoto = true;
       return;
     }
 
-    this.isLoading = true; // Show loading spinner
+    // Show loading spinner
+    this.isLoading = true;
 
     let userData: UserData = {
       name: this.name,
@@ -74,23 +71,5 @@ export class RegisterComponent {
     if(event.target.files.length > 0) {
       this.profilePhoto = event.target.files[0];
     }
-  }
-
-  loadPhoto(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if(this.profilePhoto == undefined) {
-        reject(new Error("Profile photo is not set!"));
-        return;
-      }
-  
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.photoString = reader.result as string;
-        resolve();
-      };
-      reader.onerror = reject;
-  
-      reader.readAsDataURL(this.profilePhoto);
-    });
   }
 }

@@ -27,9 +27,8 @@
         </thead>
         <tbody>
             <tr *ngFor="let application of applications">
-                <td class="py-2 px-4 border-b border-gray-200">{{ application.userData.firstName }}</td>
-                <td class="py-2 px-4 border-b border-gray-200">{{ application.userData.lastName }}</td>
-                <td class="py-2 px-4 border-b border-gray-200">{{ application.userData.email }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ application.userName }}</td>
+                <!-- TODO: Show user photo -->
                 <td class="py-2 px-4 border-b border-gray-200">{{ application.status }}</td>
                 <td *ngIf="application.status != 'canceled'" class="py-2 px-4 border-b border-gray-200">
                     <button class="bg-green-500 text-white px-4 py-2 rounded mr-2" (click)="acceptApplication(application)">Accept</button>

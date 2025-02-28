@@ -23,7 +23,7 @@ export class ProfileHikerComponent {
   constructor(
     private authService: AuthService) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit() {
     this.userProfile = this.authService.currentUserData!;
   }
 

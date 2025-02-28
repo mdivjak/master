@@ -3,6 +3,8 @@
 - [x] home
 - [x] login component
 - [x] map
+  - [ ] map icons are not showing
+  - [ ] map is broken in prod code
 - [ ] my-tours
   - [ ] html does not show all details
   - [ ] review submission does not work
@@ -11,17 +13,14 @@
 - [ ] notification-widget
   - [ ] probably does not work
 - [x] profile-club
-- [ ] profile-hiker
+- [x] profile-hiker
 - [x] register component
 - [ ] review-modal
-- [ ] sidebar-menu
-- [ ] tour-card
+  - [ ] does not align with the db model
+- [x] sidebar-menu
+- [x] tour-card
 - [ ] tour-details
+  - [ ] code is a bit ugly
 - [ ] tour-participants
-
-
-
-
-
-
-- [ ] add notification widget to navbar
+  - [ ] add decline message support
+  - [ ] review notification sending
