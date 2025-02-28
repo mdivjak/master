@@ -42,3 +42,28 @@
 - [x] notifications on application status
 - [x] grading and reviewing a tour
   - [ ] show review that user left when looking at my tours
+
+### Database calls
+- [ ] create a new user
+- [ ] get user data
+- [ ] update user data
+- [ ] create a tour with club name and photo
+- [ ] get all tours with club names and photos
+- [ ] get all tours of some club
+- [ ] get all applications of a tour
+- [ ] create an application for a tour
+- [ ] update application status and create a notification
+- [ ] check if user applied for a tour & get application status
+- [ ] get all accepted participants of some tour (possibly with names)
+- [ ] get all tours a hiker was accepted in (with organizer names)
+- [ ] get all reviews of a tour (with user names)
+- [ ] get all reviews by a certain hiker
+- [ ] notify when hiker applies
+- [ ] notify when club accepts
+- [ ] notify for tour cancellation
+- [ ] get user notifications
+- [ ] mark notification as read
+- [ ] create a review
+- [ ] get all reviews of some tour
+- [ ] get all review of some user
+- [ ] update user info - name or photo - this needs to update the club name accross all tours

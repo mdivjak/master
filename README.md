@@ -4,6 +4,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Commands
 
+Run production app locally
+
+```
+ng serve --configuration=production
+```
+
 Building prod app
 
 ```
