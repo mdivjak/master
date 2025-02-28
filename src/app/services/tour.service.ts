@@ -139,17 +139,6 @@ export class TourService {
   // END OF REFACTORING METHODS
 
 
-  async loadTour(tourId: string) {
-    const tourDoc = await getDoc(doc(this.firestore, 'tours', tourId));
-    if (tourDoc.exists()) {
-      const tourData = tourDoc.data() as Tour;
-      return { ...tourData, id: tourDoc.id };
-    } else {
-      console.error('Tour not found');
-    }
-    return undefined;
-  }
-
   async loadTours(userId: string) {
     const toursCollection = collection(this.firestore, 'tours');
     const q = query(toursCollection, where('createdBy', '==', userId));

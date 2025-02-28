@@ -86,13 +86,4 @@ export class AuthService {
   
     await updateDoc(doc(this.firestore, "users", userId), updates);
   }
-
-  //deprecate
-  updateUserData(userProfile: UserData) {
-    if(this.currentUser) {
-      return setDoc(doc(this.firestore, 'users', this.currentUser.uid), userProfile);
-    } else {
-      throw new Error('User is not logged in');
-    }
-  }
 }

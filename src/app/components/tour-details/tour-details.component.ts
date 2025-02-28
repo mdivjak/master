@@ -25,22 +25,11 @@ export class TourDetailsComponent {
     private authService: AuthService,
     private router: Router) {}
 
-  /**
-   * Initializes the component by loading tour details and setting user-specific properties.
-   * 
-   * - Retrieves the tour ID from the route parameters.
-   * - Loads the tour details if the tour ID is available, otherwise navigates to the home page.
-   * - Subscribes to the user observable to get the current user and checks if the user has applied for the tour.
-   * - Subscribes to the userType observable to determine if the current user is a hiker.
-   * 
-   * @returns {Promise<void>} A promise that resolves when the initialization is complete.
-   */
   async ngOnInit(): Promise<void> {
     const tourId = this.route.snapshot.paramMap.get('id');
 
-    // load tour details
     if (tourId) {
-      await this.loadTour(tourId);
+      await this.getTour(tourId);
     } else {
       this.router.navigate(['/']);
     }
@@ -61,8 +50,8 @@ export class TourDetailsComponent {
     });
   }
 
-  async loadTour(tourId: string) {
-    const tour = await this.tourService.loadTour(tourId) ?? null;
+  async getTour(tourId: string) {
+    const tour = await this.tourService.getTour(tourId) as Tour ?? null;
     if(!tour) {
       this.router.navigate(['/']);
     } else {

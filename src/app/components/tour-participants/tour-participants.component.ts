@@ -38,7 +38,7 @@ export class TourParticipantsComponent {
   }
 
   async loadTour(tourId: string) {
-    const tour = await this.tourService.loadTour(tourId) ?? null;
+    const tour = await this.tourService.getTour(tourId) as Tour ?? null;
     if(!tour) {
       this.router.navigate(['/']);
     } else {
