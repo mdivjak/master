@@ -7,7 +7,9 @@
   - [ ] html does not show all details
   - [ ] review submission does not work
 - [x] navbar component
-- [x] notification-widget
+  - [ ] add notification widget
+- [ ] notification-widget
+  - [ ] probably does not work
 - [x] profile-club
 - [ ] profile-hiker
 - [x] register component

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { arrayUnion, doc, Firestore, getDoc, updateDoc } from '@angular/fire/firestore';
+import { arrayUnion, collection, doc, Firestore, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,16 @@ export class NotificationService {
   private firestore = inject(Firestore);
 
   constructor() { }
+
+  async getUserNotifications(userId: string) {
+    const snapshot = await getDocs(collection(this.firestore, `users/${userId}/notifications`));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async markNotificationAsRead(userId: string, notificationId: string) {
+    // TODO: notifications might not have an id
+    await updateDoc(doc(this.firestore, `users/${userId}/notifications`, notificationId), { read: true });
+  }
 
   async sendNotification(userId: string, type: 'application' | 'statusUpdate', message: string) {
     const userRef = doc(this.firestore, 'users', userId);

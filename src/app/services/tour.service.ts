@@ -125,15 +125,5 @@ export class TourService {
     const querySnapshot = await getDocs(reviewsQuery);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
-
-  //  NOTIFICATION
-  async getUserNotifications(userId: string) {
-    const snapshot = await getDocs(collection(this.firestore, `users/${userId}/notifications`));
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async markNotificationAsRead(userId: string, notificationId: string) {
-    await updateDoc(doc(this.firestore, `users/${userId}/notifications`, notificationId), { read: true });
-  }
-
+  
 }

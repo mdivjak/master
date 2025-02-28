@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { Notification } from '../../models/notification';
 import { NgClass, NgFor, NgIf } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-notification-widget',
@@ -13,11 +14,15 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 export class NotificationWidgetComponent {
   showNotifications: boolean = false;
   notifications: Notification[] = [];
-  user: any;
   unreadNotficationsMarker: boolean = false;
 
   constructor(
+    private authService: AuthService,
     private notificationService: NotificationService) {}
+
+  async ngOnInit() {
+    this.notifications = await this.notificationService.getUserNotifications(this.authService.currentUser!.uid) as unknown as Notification[];
+  }
 
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
@@ -25,7 +30,7 @@ export class NotificationWidgetComponent {
 
   async markAsRead(notification: Notification) {
     const index = this.notifications.findIndex(n => n.timestamp === notification.timestamp);
-    await this.notificationService.markAsRead(this.user!.uid, index);
+    await this.notificationService.markAsRead(this.authService.currentUser!.uid, index);
     notification.read = true;
     this.unreadNotficationsMarker = this.notifications.some(
       notification => !notification.read

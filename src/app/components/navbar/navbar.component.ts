@@ -49,5 +49,5 @@ export class NavbarComponent {
       this.router.navigate(['/']);
     }
   }
-
+  
 }
