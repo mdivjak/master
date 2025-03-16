@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Tour } from '../../models/tour';
+import { Application, Tour } from '../../models/tour';
 import { TourService } from '../../services/tour.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -19,6 +19,7 @@ export class TourDetailsComponent {
   userId!: string;
   isHiker: boolean = false;
   hasApplied: boolean = false;
+  application!: Application;
 
   constructor(
     private loggingService: LoggingService,
@@ -43,7 +44,7 @@ export class TourDetailsComponent {
 
       if (userId) {
         this.userId = userId;
-        this.hasApplied = await this.checkIfUserHasApplied(this.tour.id!, this.userId);
+        this.hasApplied = await this.checkApplication(this.tour.id!, this.userId);
         this.loggingService.debug('TourDetailsComponent User has applied:', this.hasApplied);
       }
     });
@@ -72,22 +73,23 @@ export class TourDetailsComponent {
     if (currentUser) {
       this.loggingService.debug('TourDetailsComponent Applying for tour:', this.tour.id, 'User ID:', currentUser.uid);
       await this.tourService.applyForTour(this.tour.id!, currentUser.uid, this.authService.currentUserData?.name!, this.authService.currentUserData?.photo!);
-      this.hasApplied = true;
+      this.checkApplication(this.tour.id!, currentUser.uid);
     } else {
       this.loggingService.error('TourDetailsComponent User not logged in, cannot apply for tour');
       this.router.navigate(['/']);
     }
   }
 
-  async checkIfUserHasApplied(tourId: string, userId: string): Promise<boolean> {
+  async checkApplication(tourId: string, userId: string): Promise<boolean> {
     this.loggingService.debug('TourDetailsComponent Checking if user has applied for tour:', tourId, 'User ID:', userId);
-    let applications = await this.tourService.getUserApplication(tourId, userId);
-    this.loggingService.debug('TourDetailsComponent Applications:', applications);
-    if (applications == null) {
+    let application = await this.tourService.getUserApplication(tourId, userId);
+    this.loggingService.debug('TourDetailsComponent Applications:', application);
+    if (application == null) {
       this.loggingService.debug('TourDetailsComponent User has not applied for this tour');
       return false;
     } else {
       this.loggingService.debug('TourDetailsComponent User has applied for this tour');
+      this.application = application as Application;
       return true;
     }
   }
