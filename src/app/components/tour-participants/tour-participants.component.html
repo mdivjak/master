@@ -21,6 +21,7 @@
                 <th class="py-2 px-4 border-b border-gray-200 text-left">Photo</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left">Name</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left">Status</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left">Message</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left">Actions</th>
             </tr>
         </thead>
@@ -31,11 +32,24 @@
                 </td>
                 <td class="py-2 px-4 border-b border-gray-200">{{ application.userName }}</td>
                 <td class="py-2 px-4 border-b border-gray-200">{{ application.status }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ application.declinedMessage }}</td>
                 <td *ngIf="application.status != 'canceled'" class="py-2 px-4 border-b border-gray-200">
                     <button class="bg-green-500 text-white px-4 py-2 rounded mr-2" (click)="acceptApplication(application)">Accept</button>
-                    <button class="bg-red-500 text-white px-4 py-2 rounded" (click)="rejectApplication(application)">Reject</button>
+                    <button class="bg-red-500 text-white px-4 py-2 rounded" (click)="openModal(application)">Reject</button>
                 </td>
             </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Reject Modal -->
+<div *ngIf="showModal" id="rejectModal" class="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center min-h-screen bg-black bg-opacity-50 transition-opacity duration-300">
+  <div class="bg-white p-6 rounded shadow-lg transform transition-transform duration-300 scale-95">
+    <h2 class="text-xl font-bold mb-4">Reject Application</h2>
+    <textarea [(ngModel)]="declineMessage" class="w-full p-2 border rounded mb-4 h-32" placeholder="Enter decline message"></textarea>
+    <div class="flex justify-end">
+      <button class="bg-gray-500 text-white px-4 py-2 rounded mr-2" (click)="closeModal()">Cancel</button>
+      <button class="bg-red-500 text-white px-4 py-2 rounded" (click)="rejectApplication()">Reject</button>
+    </div>
+  </div>
 </div>
