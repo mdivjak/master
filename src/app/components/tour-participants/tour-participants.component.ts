@@ -4,7 +4,6 @@ import { TourService } from '../../services/tour.service';
 import { Application, Tour } from '../../models/tour';
 import { NgFor, NgIf } from '@angular/common';
 import { NotificationService } from '../../services/notification.service';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-tour-participants',
@@ -20,7 +19,6 @@ export class TourParticipantsComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private authService: AuthService,
     private tourService: TourService,
     private notificationService: NotificationService,
     private router: Router

@@ -18,17 +18,18 @@
     <table class="min-w-full bg-white">
         <thead>
             <tr>
-                <th class="py-2 px-4 border-b border-gray-200 text-left">First Name</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left">Last Name</th>
-                <th class="py-2 px-4 border-b border-gray-200 text-left">E-mail</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left">Photo</th>
+                <th class="py-2 px-4 border-b border-gray-200 text-left">Name</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left">Status</th>
                 <th class="py-2 px-4 border-b border-gray-200 text-left">Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let application of applications">
+                <td class="py-2 px-4 border-b border-gray-200">
+                    <img [src]="application.userPhoto" alt="{{ application.userName }}" class="w-10 h-10 rounded-full inline-block mr-2">
+                </td>
                 <td class="py-2 px-4 border-b border-gray-200">{{ application.userName }}</td>
-                <!-- TODO: Show user photo -->
                 <td class="py-2 px-4 border-b border-gray-200">{{ application.status }}</td>
                 <td *ngIf="application.status != 'canceled'" class="py-2 px-4 border-b border-gray-200">
                     <button class="bg-green-500 text-white px-4 py-2 rounded mr-2" (click)="acceptApplication(application)">Accept</button>
