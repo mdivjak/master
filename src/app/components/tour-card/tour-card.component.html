@@ -1,14 +1,13 @@
 <li class="flex mb-4 p-4 border rounded shadow hover:border-2">
-    <div>
-      <h2 class="text-xl font-semibold">{{ tour.name }}</h2>
-      <p><strong>Date:</strong> {{ tour.date }}</p>
-      <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
-      <p><strong>Participants:</strong> {{ tour.maxParticipants }}</p>
-      <p *ngIf="tour.clubName"><strong>Organized By:</strong> {{ tour.clubName }}</p>
+  <div class="flex-grow">
+    <h2 class="text-xl font-semibold">{{ tour.name }}</h2>
+    <p><strong>Date:</strong> {{ tour.date }}</p>
+    <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
+    <p><strong>Participants:</strong> {{ tour.maxParticipants }}</p>
+    <div class="flex items-center mt-2">
+      <img *ngIf="tour.clubPhoto" [src]="tour.clubPhoto" alt="{{ tour.clubName }} photo" class="w-8 h-8 rounded-full mr-2">
+      <p *ngIf="tour.clubName" class="text-sm text-gray-600">{{ tour.clubName }}</p>
     </div>
-    
-    <div class="flex-grow"></div>
-
-    <img *ngIf="tour.photo" [src]="tour.photo" alt="{{ tour.name }} photo" class="w-auto h-36 mb-4 rounded" style="object-fit: cover;">
-
-  </li>
+  </div>
+  <img *ngIf="tour.photo" [src]="tour.photo" alt="{{ tour.name }} photo" class="w-auto h-36 mb-4 rounded" style="object-fit: cover;">
+</li>

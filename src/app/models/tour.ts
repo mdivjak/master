@@ -1,4 +1,3 @@
-  
 export interface Tour {
     id?: string;
 
