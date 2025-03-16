@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <!-- Right Flexbox: Apply Button -->
+  <!-- Right Flexbox: Apply Button and Participants List -->
   <div class="lg:w-1/4 p-4 flex flex-col items-center">
     <button
       *ngIf="isHiker"
@@ -28,5 +28,14 @@
     >
       Apply for the Tour
     </button>
+    <div *ngIf="tour.participantsNames.length > 0" class="mt-4 w-full">
+      <h3 class="text-xl font-semibold mb-2">Participants</h3>
+      <ul>
+        <li *ngFor="let participant of tour.participantsNames; let i = index" class="flex items-center mb-2">
+          <img [src]="tour.participantsPhotos[i]" alt="{{ participant }}" class="w-8 h-8 rounded-full mr-2">
+          <p class="text-md">{{ participant }}</p>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

@@ -100,6 +100,59 @@ export class TourService {
     // });
   }
 
+  async addTourParticipant(tourId: string, userId: string, userName: string, userPhoto: string) {
+    const tourDocRef = doc(this.firestore, 'tours', tourId);
+    const tourDoc = await getDoc(tourDocRef);
+
+    if (tourDoc.exists()) {
+      const tourData = tourDoc.data() as Tour;
+      const participantsIds = tourData.participantsIds || [];
+      const participantsNames = tourData.participantsNames || [];
+      const participantsPhotos = tourData.participantsPhotos || [];
+
+      participantsIds.push(userId);
+      participantsNames.push(userName);
+      participantsPhotos.push(userPhoto);
+
+      await updateDoc(tourDocRef, {
+        participantsIds,
+        participantsNames,
+        participantsPhotos
+      });
+    } else {
+      throw new Error('Tour not found');
+    }
+  }
+
+  async removeTourParticipant(tourId: string, userId: string) {
+    const tourDocRef = doc(this.firestore, 'tours', tourId);
+    const tourDoc = await getDoc(tourDocRef);
+
+    if (tourDoc.exists()) {
+      const tourData = tourDoc.data() as Tour;
+      const participantsIds = tourData.participantsIds || [];
+      const participantsNames = tourData.participantsNames || [];
+      const participantsPhotos = tourData.participantsPhotos || [];
+
+      const index = participantsIds.indexOf(userId);
+      if (index > -1) {
+        participantsIds.splice(index, 1);
+        participantsNames.splice(index, 1);
+        participantsPhotos.splice(index, 1);
+
+        await updateDoc(tourDocRef, {
+          participantsIds,
+          participantsNames,
+          participantsPhotos
+        });
+      } else {
+        throw new Error('Participant not found');
+      }
+    } else {
+      throw new Error('Tour not found');
+    }
+  }
+
   // in this case you can just get tour and read participants from there
   // async getAcceptedParticipants(tourId: string) {
   //   const tourRef = doc(this.firestore, `tours/${tourId}`);

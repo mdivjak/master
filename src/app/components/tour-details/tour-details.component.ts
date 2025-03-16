@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Tour } from '../../models/tour';
 import { TourService } from '../../services/tour.service';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { MapComponent } from "../map/map.component";
 import { LoggingService } from '../../services/logging-service.service';
@@ -10,7 +10,7 @@ import { LoggingService } from '../../services/logging-service.service';
 @Component({
   selector: 'app-tour-details',
   standalone: true,
-  imports: [NgIf, NgClass, MapComponent],
+  imports: [NgIf, NgClass, MapComponent, NgFor],
   templateUrl: './tour-details.component.html',
   styleUrl: './tour-details.component.css'
 })

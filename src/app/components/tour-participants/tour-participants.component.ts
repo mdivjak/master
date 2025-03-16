@@ -55,12 +55,15 @@ export class TourParticipantsComponent {
 
   async rejectApplication(application: Application) {
     await this.tourService.updateApplicationStatus(this.tourId, application.userId, "declined", "");
+    this.tourService.removeTourParticipant(this.tourId, application.userId);
     this.notificationService.sendNotification(application.userId, 'statusUpdate', `Your application for ${this.tour.name} has been rejected`);
     this.applications = await this.getApplications() as unknown as Application[];
+    // TODO: Add logic to send a decline message
   }
 
   async acceptApplication(application: Application) {
     await this.tourService.updateApplicationStatus(this.tourId, application.userId, "accepted", "");
+    await this.tourService.addTourParticipant(this.tourId, application.userId, application.userName, application.userPhoto);
     this.notificationService.sendNotification(application.userId, 'statusUpdate', `Your application for ${this.tour.name} has been accepted`);
     this.applications = await this.getApplications() as unknown as Application[];
   }
