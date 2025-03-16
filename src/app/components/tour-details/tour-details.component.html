@@ -9,10 +9,12 @@
         <img [src]="tour.clubPhoto" alt="{{ tour.clubName }}" class="w-8 h-8 rounded-full mr-2">
         <p class="text-md font-semibold">{{ tour.clubName }}</p>
       </div>
+      <img [src]="tour.photo" alt="{{ tour.name }}" class="w-3/4 h-auto mb-6">
       <p class="mb-2"><strong>Date:</strong> {{ tour.date }}</p>
       <p class="mb-2"><strong>Description:</strong> {{ tour.description }}</p>
       <p class="mb-2"><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
       <p class="mb-2"><strong>Participants:</strong> {{ tour.maxParticipants }}</p>
+      <p class="mb-2"><strong>Spots Left:</strong> {{ tour.maxParticipants - tour.participantsIds.length }}</p>
       <app-map [gpxContent]="tour.gpxContent" class="mt-4"></app-map>
     </div>
   </div>
