@@ -161,8 +161,6 @@ export class TourService {
   // }
   
   async getUserAppliedTours(userId: string) {
-    // ne radi zato sto club id nije u participants nego u objektu
-    //throw Error('Not implemented');
     const toursCollection = collection(this.firestore, 'tours');
     const q = query(toursCollection, where('participantsIds', 'array-contains', userId));
     const querySnapshot = await getDocs(q);
