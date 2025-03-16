@@ -4,6 +4,7 @@
     <p><strong>Date:</strong> {{ tour.date }}</p>
     <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
     <p><strong>Participants:</strong> {{ tour.maxParticipants }}</p>
+    <p><strong>Spots Left:</strong> {{ tour.maxParticipants - tour.participantsIds.length }}</p>
     <div class="flex items-center mt-2">
       <img *ngIf="tour.clubPhoto" [src]="tour.clubPhoto" alt="{{ tour.clubName }} photo" class="w-8 h-8 rounded-full mr-2">
       <p *ngIf="tour.clubName" class="text-sm text-gray-600">{{ tour.clubName }}</p>
