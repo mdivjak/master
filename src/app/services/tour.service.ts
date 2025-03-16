@@ -4,6 +4,7 @@ import { Application, Review, Tour } from '../models/tour';
 import { combineLatest, firstValueFrom, Observable, of, switchMap } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { map } from 'rxjs/operators';
+import { LoggingService } from './logging-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,9 @@ export class TourService {
 
   private firestore = inject(Firestore);
 
-  constructor() { }
+  constructor(
+    private loggingService: LoggingService
+  ) { }
 
   // REFACTORING METHODS
   async createTour(tour: Tour) {
@@ -74,8 +77,15 @@ export class TourService {
 
   // returns null if user did not apply
   async getUserApplication(tourId: string, userId: string) {
+    this.loggingService.debug('TourService Getting user application for tour:', tourId, 'and user:', userId);
     const appDoc = await getDoc(doc(this.firestore, `tours/${tourId}/applications`, userId));
-    return appDoc.exists() ? appDoc.data() : null;
+    if(appDoc.exists()) {
+      this.loggingService.debug('TourService Application data:', appDoc.data());
+      return appDoc.data();
+    } else {
+      this.loggingService.debug('TourService No application found');
+      return null;
+    }
   }
 
   async updateApplicationStatus(tourId: string, userId: string, status: 'pending' | 'accepted' | 'declined' | 'canceled', declinedMessage?: string) {
