@@ -161,10 +161,24 @@ export class TourService {
   // }
   
   async getUserAppliedTours(userId: string) {
-    const toursCollection = collection(this.firestore, 'tours');
-    const q = query(toursCollection, where('participantsIds', 'array-contains', userId));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const applicationsQuery = query(
+      collectionGroup(this.firestore, 'applications'),
+      where('userId', '==', userId)
+    );
+    const querySnapshot = await getDocs(applicationsQuery);
+  
+    const applications = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Application));
+    const tourIds = querySnapshot.docs.map(doc => doc.ref.parent.parent?.id).filter(id => id !== undefined) as string[];
+  
+    const tours = await Promise.all(tourIds.map(async tourId => {
+      const tourDoc = await getDoc(doc(this.firestore, 'tours', tourId));
+      return tourDoc.exists() ? { id: tourDoc.id, ...tourDoc.data() } as Tour : null;
+    }));
+  
+    return {
+      tours: tours.filter(tour => tour !== null) as Tour[],
+      applications
+    };
   }
 
   async createReview(tourId: string, review: Review) {

@@ -3,7 +3,8 @@ import { TourService } from '../../services/tour.service';
 import { AuthService } from '../../services/auth.service';
 import { NgFor, NgIf } from '@angular/common';
 import { ReviewModalComponent } from "../review-modal/review-modal.component";
-import { Review, Tour } from '../../models/tour';
+import { Application, Review, Tour } from '../../models/tour';
+import { LoggingService } from '../../services/logging-service.service';
 
 @Component({
   selector: 'app-my-tours',
@@ -14,20 +15,23 @@ import { Review, Tour } from '../../models/tour';
 })
 export class MyToursComponent {
   tours: Tour[] = [];
+  applications: Application[] = [];
   showReviewModal: boolean = false;
   selectedTourId!: string;
 
   constructor(
     private tourService: TourService,
-    private authService: AuthService) {}
+    private authService: AuthService,
+    private loggingService: LoggingService) {}
 
   async ngOnInit(): Promise<void> {
     this.getUserAppliedTours();
-    console.log(this.tours);
   }
 
   async getUserAppliedTours() {
-    this.tours = await this.tourService.getUserAppliedTours(this.authService.currentUser!.uid) as Tour[];
+    let results = await this.tourService.getUserAppliedTours(this.authService.currentUser!.uid);
+    this.tours = results.tours;
+    this.applications = results.applications;
   }
 
   cancelApplication(tourId: string) {
