@@ -1,7 +1,7 @@
 ## Backlog
 
 ### Left to do
-- [ ] add notification to navbar
+- [x] add notification to navbar
 - [ ] fix notification sending
   - [ ] when user applies for a tour
   - [ ] when application status changes

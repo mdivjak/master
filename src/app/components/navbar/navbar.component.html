@@ -8,7 +8,7 @@
 
     <!-- User-specific options -->
     <ng-container *ngIf="user$ | async as user; else loggedOut">
-
+      <app-notification-widget></app-notification-widget>
       <li><a (click)="goToProfile()" class="text-white hover:text-gray-400">Profile</a></li>
 
       <li><a (click)="logout()" class="text-white hover:text-gray-400 cursor-pointer">Logout</a></li>

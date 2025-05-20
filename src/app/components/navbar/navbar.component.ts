@@ -4,11 +4,12 @@ import { User } from 'firebase/auth';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { NotificationWidgetComponent } from '../notification-widget/notification-widget.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, NotificationWidgetComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
