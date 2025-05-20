@@ -1,5 +1,14 @@
 ## Backlog
 
+### Left to do
+- [ ] add notification to navbar
+- [ ] fix notification sending
+  - [ ] when user applies for a tour
+  - [ ] when application status changes
+- [ ] show past tours of hiker
+- [ ] add tour search on home page
+- [ ] save review when submitted
+
 - [ ] input validation throughout the app
 - [x] remove firestore dependency from home component
 - [x] remove firestore dependency from create tour component
@@ -67,3 +76,7 @@
 - [ ] get all reviews of some tour
 - [ ] get all review of some user
 - [ ] update user info - name or photo - this needs to update the club name accross all tours
+
+
+### TODO
+- [ ] cuvanje reviewa kad se submituje
