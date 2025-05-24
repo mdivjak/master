@@ -14,7 +14,8 @@ export class TourService {
   private firestore = inject(Firestore);
 
   constructor(
-    private loggingService: LoggingService
+    private loggingService: LoggingService,
+    private notificationService: NotificationService
   ) { }
 
   // REFACTORING METHODS
@@ -43,7 +44,7 @@ export class TourService {
 
   // APPLICATIONS SECTION
 
-  async applyForTour(tourId: string, userId: string, userName: string, userPhoto: string) {
+  async applyForTour(tourId: string, userId: string, userName: string, userPhoto: string, clubId: string, tourName: string) {
     let application: Application  = {
       userId: userId,
       userName: userName,
@@ -57,16 +58,20 @@ export class TourService {
     await setDoc(doc(this.firestore, `tours/${tourId}/applications`, userId), application);
   
     // Notify the club
-    // const tourDoc = await getDoc(doc(this.firestore, "tours", tourId));
-    // if (tourDoc.exists()) {
-    //   const { createdBy: clubId, name: tourName } = tourDoc.data();
-    //   await addDoc(collection(this.firestore, `users/${clubId}/notifications`), {
-    //     message: `New application for "${tourName}"`,
-    //     type: "application",
-    //     read: false,
-    //     createdAt: new Date()
-    //   });
-    // }
+    if (clubId && tourName) {
+      try {
+        await this.notificationService.sendNotification(
+          clubId,
+          'application',
+          `New application for your tour: ${tourName} from ${userName}`
+        );
+        this.loggingService.info(`Notification sent to club ${clubId} for tour ${tourName}`);
+      } catch (error) {
+        this.loggingService.error('Error sending notification to club:', error);
+      }
+    } else {
+      this.loggingService.warn(`ClubId or TourName missing for tour ${tourId}. ClubId: ${clubId}, TourName: ${tourName}`);
+    }
   }
 
   async getTourApplications(tourId: string) {
