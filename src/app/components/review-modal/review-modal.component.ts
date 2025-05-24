@@ -1,6 +1,8 @@
 import { NgFor } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service'; // Added
+import { Review } from '../../models/tour'; // Added - Assuming Review model exists and includes these fields
 
 @Component({
   selector: 'app-review-modal',
@@ -11,8 +13,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 })
 export class ReviewModalComponent {
   @Input() tourId!: string;
-  @Output() reviewSubmitted = new EventEmitter<{ tourId: string, review: string, rating: number }>();
+  @Output() reviewSubmitted = new EventEmitter<{ tourId: string, reviewPayload: Review }>(); // Updated
   reviewForm: FormGroup;
+  private authService = inject(AuthService);
 
   constructor(private fb: FormBuilder) {
     this.reviewForm = this.fb.group({
@@ -23,7 +26,23 @@ export class ReviewModalComponent {
 
   submitReview() {
     if (this.reviewForm.valid) {
-      this.reviewSubmitted.emit({ tourId: this.tourId, ...this.reviewForm.value });
+      const firebaseUser = this.authService.currentUser; // Get Firebase User
+      const currentUserDetails = this.authService.currentUserData; // Get UserData (name, photo)
+
+      if (firebaseUser && currentUserDetails) {
+        const reviewPayload: Review = {
+          userId: firebaseUser.uid, // Corrected: Use uid from Firebase User
+          userName: currentUserDetails.name,
+          userPhoto: currentUserDetails.photo,
+          tourId: this.tourId, // Added tourId
+          review: this.reviewForm.value.review,
+          rating: this.reviewForm.value.rating,
+          timestamp: new Date().toISOString()
+        };
+        this.reviewSubmitted.emit({ tourId: this.tourId, reviewPayload });
+      } else {
+        console.error('User not logged in or user details not loaded, cannot submit review.');
+      }
     }
   }
 }

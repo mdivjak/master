@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Application, Tour } from '../../models/tour';
+import { Application, Review, Tour } from '../../models/tour';
 import { TourService } from '../../services/tour.service';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf, DecimalPipe } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { MapComponent } from "../map/map.component";
 import { LoggingService } from '../../services/logging-service.service';
@@ -10,7 +10,7 @@ import { LoggingService } from '../../services/logging-service.service';
 @Component({
   selector: 'app-tour-details',
   standalone: true,
-  imports: [NgIf, NgClass, MapComponent, NgFor],
+  imports: [NgIf, NgClass, MapComponent, NgFor, DatePipe, DecimalPipe],
   templateUrl: './tour-details.component.html',
   styleUrl: './tour-details.component.css'
 })
@@ -20,6 +20,9 @@ export class TourDetailsComponent {
   isHiker: boolean = false;
   hasApplied: boolean = false;
   application!: Application;
+  reviews: Review[] = [];
+  averageRating: number = 0;
+  tourId!: string;
 
   constructor(
     private loggingService: LoggingService,
@@ -29,11 +32,16 @@ export class TourDetailsComponent {
     private router: Router) {}
 
   async ngOnInit(): Promise<void> {
-    const tourId = this.route.snapshot.paramMap.get('id');
-    this.loggingService.debug('TourDetailsComponent Tour ID from route:', tourId);
+    const tourIdFromRoute = this.route.snapshot.paramMap.get('id');
+    this.loggingService.debug('TourDetailsComponent Tour ID from route:', tourIdFromRoute);
 
-    if (tourId) {
-      await this.getTour(tourId);
+    if (tourIdFromRoute) {
+      this.tourId = tourIdFromRoute;
+      await this.getTour(this.tourId);
+      // Ensure tour is loaded before trying to load reviews
+      if (this.tour) {
+        await this.loadTourReviews();
+      }
     } else {
       this.router.navigate(['/']);
     }
@@ -42,9 +50,9 @@ export class TourDetailsComponent {
       this.loggingService.debug('TourDetailsComponent Current user:', user);
       const userId = user?.uid;
 
-      if (userId) {
+      if (userId && this.tourId) { // ensure tourId is available
         this.userId = userId;
-        this.hasApplied = await this.checkApplication(this.tour.id!, this.userId);
+        this.hasApplied = await this.checkApplication(this.tourId, this.userId);
         this.loggingService.debug('TourDetailsComponent User has applied:', this.hasApplied);
       }
     });
@@ -71,9 +79,9 @@ export class TourDetailsComponent {
   async applyForTour() {
     const currentUser = this.authService.currentUser;
     if (currentUser) {
-      this.loggingService.debug('TourDetailsComponent Applying for tour:', this.tour.id, 'User ID:', currentUser.uid);
-      await this.tourService.applyForTour(this.tour.id!, currentUser.uid, this.authService.currentUserData?.name!, this.authService.currentUserData?.photo!);
-      this.checkApplication(this.tour.id!, currentUser.uid);
+      this.loggingService.debug('TourDetailsComponent Applying for tour:', this.tourId, 'User ID:', currentUser.uid);
+      await this.tourService.applyForTour(this.tourId, currentUser.uid, this.authService.currentUserData?.name!, this.authService.currentUserData?.photo!);
+      this.checkApplication(this.tourId, currentUser.uid);
     } else {
       this.loggingService.error('TourDetailsComponent User not logged in, cannot apply for tour');
       this.router.navigate(['/']);
@@ -94,4 +102,25 @@ export class TourDetailsComponent {
     }
   }
 
+  private async loadTourReviews(): Promise<void> {
+    if (this.tourId) {
+      this.loggingService.debug('TourDetailsComponent Loading reviews for tour:', this.tourId);
+      try {
+        const reviews = await this.tourService.getTourReviews(this.tourId);
+        this.reviews = reviews;
+        this.loggingService.debug('TourDetailsComponent Reviews loaded:', this.reviews);
+        if (this.reviews && this.reviews.length > 0) {
+          const sum = this.reviews.reduce((acc, review) => acc + Number(review.rating), 0);
+          this.averageRating = sum / this.reviews.length;
+        } else {
+          this.averageRating = 0;
+        }
+        this.loggingService.debug('TourDetailsComponent Average rating calculated:', this.averageRating);
+      } catch (error) {
+        this.loggingService.error('TourDetailsComponent Error loading tour reviews:', error);
+        this.reviews = [];
+        this.averageRating = 0;
+      }
+    }
+  }
 }

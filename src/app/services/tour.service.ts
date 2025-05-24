@@ -187,30 +187,40 @@ export class TourService {
       collectionGroup(this.firestore, 'applications'),
       where('userId', '==', userId)
     );
-    const querySnapshot = await getDocs(applicationsQuery);
+    const applicationsSnap = await getDocs(applicationsQuery);
+
+    const userReviewsQuery = query(collectionGroup(this.firestore, 'reviews'), where('userId', '==', userId));
+    const userReviewsSnap = await getDocs(userReviewsQuery);
+    const reviewedTourIds = new Set(userReviewsSnap.docs.map(doc => {
+      const data = doc.data();
+      return data['tourId'];
+    }));
   
-    const appliedTours = querySnapshot.docs.map(doc => {
-      const applicationData = doc.data() as Application;
-      // The 'id' of the application document itself is doc.id
-      // This can be used as 'applicationId' in the component.
-      // The Application model now contains all denormalized tour info.
+    const appliedTours = applicationsSnap.docs.map(applicationDoc => {
+      const appData = applicationDoc.data() as Application;
+      const hasReviewed = reviewedTourIds.has(appData.tourId as string);
       return {
-        id: doc.id, // This is the applicationId
-        ...applicationData
-      } as Application; // Casting to Application, assuming 'id' is an acceptable field or will be handled
+        ...appData,
+        id: applicationDoc.id, // Ensure application ID is included
+        hasBeenReviewed: hasReviewed,
+      };
     });
   
     return appliedTours;
   }
 
-  async createReview(tourId: string, review: Review) {
-    await addDoc(collection(this.firestore, `tours/${tourId}/reviews`), review);
+  async createReview(tourId: string, reviewData: Review) {
+    // const reviewToSave = { ...reviewData, tourId: tourId }; // Add tourId here
+    // The tourId is already part of reviewData due to changes in ReviewModalComponent
+    const reviewsCol = collection(this.firestore, `tours/${tourId}/reviews`);
+    return addDoc(reviewsCol, reviewData);
   }
 
-  async getTourReviews(tourId: string) {
+  async getTourReviews(tourId: string): Promise<Review[]> {
     const reviewsCollection = collection(this.firestore, `tours/${tourId}/reviews`);
-    const querySnapshot = await getDocs(reviewsCollection);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const q = query(reviewsCollection, orderBy('timestamp', 'desc'));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Review));
   }
 
   async getUserReviews(userId: string) {

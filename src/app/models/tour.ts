@@ -35,12 +35,15 @@ id?: string; // Document ID of the application
     status: 'pending' | 'accepted' | 'declined' | 'canceled';
     timestamp: string;
     declinedMessage: string;
+    hasBeenReviewed?: boolean;
 }
 
 export interface Review {
+    id?: string;
     userId: string;
     userName: string;
     userPhoto: string;
+    tourId: string;
     
     review: string;
     rating: number;

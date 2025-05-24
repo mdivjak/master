@@ -62,19 +62,10 @@ export class MyToursComponent {
     this.showReviewModal = false;
   }
 
-  async handleReviewSubmission(event: { tourId: string, review: string, rating: number }) {
-    if (this.authService.currentUser) {
-      let review: Review = {
-        userId: this.authService.currentUser.uid,
-        review: event.review,
-        rating: event.rating,
-        userName: this.authService.currentUser.displayName!,
-        userPhoto: this.authService.currentUser.photoURL!,
-        timestamp: new Date().toISOString()
-      };
-      await this.tourService.createReview(event.tourId, review);
-      this.loadUserAppliedTours();
-    }
+  async handleReviewSubmission(event: { tourId: string, reviewPayload: Review }) { // Updated event type
+    // The reviewPayload already contains all necessary user info and timestamp from ReviewModalComponent
+    await this.tourService.createReview(event.tourId, event.reviewPayload);
+    this.loadUserAppliedTours(); // Refresh the list
     this.closeReviewModal();
   }
 }

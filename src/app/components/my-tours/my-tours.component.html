@@ -22,9 +22,14 @@
                             <button *ngIf="!isPastTour(appliedTour.tourDate) && appliedTour.status === 'accepted'" (click)="cancelApplication(appliedTour.tourId, appliedTour.id!)" class="mt-2 py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
                                 Cancel
                             </button>
-                            <button *ngIf="isPastTour(appliedTour.tourDate) && appliedTour.status === 'accepted'" (click)="openReviewModal(appliedTour.tourId)" class="mt-2 py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                Review
-                            </button>
+                            <ng-container *ngIf="appliedTour.status === 'accepted' && isPastTour(appliedTour.tourDate)">
+                              <button *ngIf="!appliedTour.hasBeenReviewed" (click)="openReviewModal(appliedTour.tourId)" class="">
+                                Rate Tour
+                              </button>
+                              <span *ngIf="appliedTour.hasBeenReviewed" class="text-xs text-gray-500 italic">
+                                Already Reviewed
+                              </span>
+                            </ng-container>
                         </td>
                 </tr>
                 </tbody>

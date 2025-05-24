@@ -17,6 +17,40 @@
       <p class="mb-2"><strong>Spots Left:</strong> {{ tour.maxParticipants - tour.participantsIds.length }}</p>
       <app-map [gpxContent]="tour.gpxContent" class="mt-4"></app-map>
     </div>
+<div class="mt-8 p-4 bg-white shadow rounded-lg">
+    <h3 class="text-xl font-semibold mb-4">Participant Reviews</h3>
+    <div *ngIf="reviews && reviews.length > 0; else noReviews">
+      <div *ngIf="averageRating > 0" class="mb-4">
+        <p class="text-lg font-medium">Average Rating: {{ averageRating | number:'1.1-1' }} / 5</p>
+        <!-- Basic star display for average (can be enhanced later) -->
+        <p>
+          <span *ngFor="let i of [1,2,3,4,5]" class="text-yellow-400">
+            {{ i <= averageRating ? '★' : '☆' }}
+          </span>
+        </p>
+      </div>
+      <div *ngFor="let review of reviews" class="border-b last:border-b-0 py-4">
+        <div class="flex items-start space-x-3">
+          <img [src]="review.userPhoto || 'assets/profile-photo1.jpg'" alt="{{ review.userName }} photo" class="w-10 h-10 rounded-full">
+          <div>
+            <p class="font-semibold">{{ review.userName }}</p>
+            <p class="text-sm text-gray-600">{{ review.timestamp | date:'mediumDate' }}</p>
+            <!-- Basic star display for individual review -->
+            <p class="my-1">
+              <span *ngFor="let i of [1,2,3,4,5]" class="text-yellow-400">
+                {{ i <= review.rating ? '★' : '☆' }}
+              </span>
+              <span class="ml-2 text-gray-700">({{ review.rating }}/5)</span>
+            </p>
+            <p class="text-gray-800 mt-1">{{ review.review }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noReviews>
+      <p>No reviews yet for this tour.</p>
+    </ng-template>
+  </div>
   </div>
 
   <!-- Right Flexbox: Apply Button and Participants List -->
