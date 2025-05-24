@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { arrayUnion, collection, doc, Firestore, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDocs, orderBy, query, updateDoc } from '@angular/fire/firestore';
+import { Notification } from '../models/notification';
 
 @Injectable({
   providedIn: 'root'
@@ -10,38 +11,33 @@ export class NotificationService {
 
   constructor() { }
 
-  async getUserNotifications(userId: string) {
-    const snapshot = await getDocs(collection(this.firestore, `users/${userId}/notifications`));
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async markNotificationAsRead(userId: string, notificationId: string) {
-    // TODO: notifications might not have an id
-    await updateDoc(doc(this.firestore, `users/${userId}/notifications`, notificationId), { read: true });
-  }
-
-  async sendNotification(userId: string, type: 'application' | 'statusUpdate', message: string) {
-    const userRef = doc(this.firestore, 'users', userId);
-    const notification = {
-      type: type,
-      message: message,
-      read: false,
-      createdAt: new Date().toISOString()
-    };
-    await updateDoc(userRef, {
-      notifications: arrayUnion(notification)
+  async getUserNotifications(userId: string): Promise<Notification[]> {
+    const notificationsRef = collection(this.firestore, `users/${userId}/notifications`);
+    // Assuming 'timestamp' is the field to order by, matching the Notification model
+    const q = query(notificationsRef, orderBy('timestamp', 'desc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => {
+      const data = doc.data() as Omit<Notification, 'id'>; // Cast data to Notification, excluding id
+      return { id: doc.id, ...data };
     });
   }
 
-  async markAsRead(uid: string, index: number) {
-    const userRef = doc(this.firestore, 'users', uid);
-    const userSnap = await getDoc(userRef);
-    if (userSnap.exists()) {
-      const notifications = userSnap.data()['notifications'];
-      if (notifications && notifications[index]) {
-        notifications[index].read = true;
-        await updateDoc(userRef, { notifications: notifications });
-      }
-    }
+  async sendNotification(userId: string, type: 'application' | 'statusUpdate', message: string): Promise<void> {
+    const notificationsRef = collection(this.firestore, `users/${userId}/notifications`);
+    const notification: Omit<Notification, 'id'> = { // Ensure it matches the Notification model, excluding id
+      userId: userId, // Add userId as per model
+      senderId: type, // Use 'type' as 'senderId'
+      message: message,
+      read: false,
+      timestamp: new Date().toISOString() // Use 'timestamp' as per model
+    };
+    await addDoc(notificationsRef, notification);
+  }
+
+  async markAsRead(userId: string, notificationId: string): Promise<void> {
+    // This method replaces the old markAsRead and the existing markNotificationAsRead
+    // The comment "TODO: notifications might not have an id" is resolved as we now expect an id.
+    const notificationRef = doc(this.firestore, `users/${userId}/notifications`, notificationId);
+    await updateDoc(notificationRef, { read: true });
   }
 }

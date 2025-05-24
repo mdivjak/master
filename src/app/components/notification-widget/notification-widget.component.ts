@@ -21,7 +21,12 @@ export class NotificationWidgetComponent {
     private notificationService: NotificationService) {}
 
   async ngOnInit() {
-    this.notifications = await this.notificationService.getUserNotifications(this.authService.currentUser!.uid) as unknown as Notification[];
+    // The cast to unknown as Notification[] might be hiding potential type issues.
+    // It's better to ensure NotificationService.getUserNotifications returns Notification[] directly
+    // or to map the result explicitly if the shapes differ.
+    // For now, assuming the service returns the correct shape including 'id'.
+    this.notifications = await this.notificationService.getUserNotifications(this.authService.currentUser!.uid);
+    this.unreadNotficationsMarker = this.notifications.some(n => !n.read);
   }
 
   toggleNotifications() {
@@ -29,11 +34,18 @@ export class NotificationWidgetComponent {
   }
 
   async markAsRead(notification: Notification) {
-    const index = this.notifications.findIndex(n => n.timestamp === notification.timestamp);
-    await this.notificationService.markAsRead(this.authService.currentUser!.uid, index);
-    notification.read = true;
+    if (!notification.id) {
+      console.error('Notification ID is missing, cannot mark as read.');
+      return;
+    }
+    await this.notificationService.markAsRead(this.authService.currentUser!.uid, notification.id);
+    // Optimistically update the UI
+    const foundNotification = this.notifications.find(n => n.id === notification.id);
+    if (foundNotification) {
+      foundNotification.read = true;
+    }
     this.unreadNotficationsMarker = this.notifications.some(
-      notification => !notification.read
+      n => !n.read
     );
   }
 }
