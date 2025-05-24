@@ -72,7 +72,7 @@ export class TourDetailsComponent {
     const currentUser = this.authService.currentUser;
     if (currentUser) {
       this.loggingService.debug('TourDetailsComponent Applying for tour:', this.tour.id, 'User ID:', currentUser.uid);
-      await this.tourService.applyForTour(this.tour.id!, currentUser.uid, this.authService.currentUserData?.name!, this.authService.currentUserData?.photo!, this.tour.clubId, this.tour.name);
+      await this.tourService.applyForTour(this.tour.id!, currentUser.uid, this.authService.currentUserData?.name!, this.authService.currentUserData?.photo!);
       this.checkApplication(this.tour.id!, currentUser.uid);
     } else {
       this.loggingService.error('TourDetailsComponent User not logged in, cannot apply for tour');

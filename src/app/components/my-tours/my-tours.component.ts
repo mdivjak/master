@@ -14,10 +14,9 @@ import { LoggingService } from '../../services/logging-service.service';
   styleUrl: './my-tours.component.css'
 })
 export class MyToursComponent {
-  tours: Tour[] = [];
-  applications: Application[] = [];
+  appliedTours: Application[] = []; // Combined data source
   showReviewModal: boolean = false;
-  selectedTourId!: string;
+  selectedTourId!: string; // Still needed for review modal if passing only tourId
 
   constructor(
     private tourService: TourService,
@@ -25,19 +24,29 @@ export class MyToursComponent {
     private loggingService: LoggingService) {}
 
   async ngOnInit(): Promise<void> {
-    this.getUserAppliedTours();
+    this.loadUserAppliedTours();
   }
 
-  async getUserAppliedTours() {
-    let results = await this.tourService.getUserAppliedTours(this.authService.currentUser!.uid);
-    this.tours = results.tours;
-    this.applications = results.applications;
+  async loadUserAppliedTours() {
+    if (this.authService.currentUser) {
+      this.appliedTours = await this.tourService.getUserAppliedTours(this.authService.currentUser.uid);
+      this.loggingService.debug('Loaded applied tours:', this.appliedTours);
+    } else {
+      this.loggingService.warn('No current user found, cannot load applied tours.');
+      this.appliedTours = [];
+    }
   }
 
-  cancelApplication(tourId: string) {
-    this.tourService.updateApplicationStatus(tourId, this.authService.currentUser?.uid!, "canceled", "");
-    this.tourService.removeTourParticipant(tourId, this.authService.currentUser?.uid!);
-    this.getUserAppliedTours();
+  async cancelApplication(tourId: string, applicationId: string) {
+    // applicationId is the doc.id of the application, which is userId in the context of tours/{tourId}/applications/{userId}
+    if (this.authService.currentUser?.uid === applicationId) {
+      await this.tourService.updateApplicationStatus(tourId, applicationId, "canceled", "");
+      // Assuming removeTourParticipant also uses userId which is applicationId here
+      await this.tourService.removeTourParticipant(tourId, applicationId);
+      this.loadUserAppliedTours(); // Refresh the list
+    } else {
+      this.loggingService.error('User ID mismatch or no user logged in. Cannot cancel application.');
+    }
   }
 
   openReviewModal(tourId: string) {
@@ -64,7 +73,7 @@ export class MyToursComponent {
         timestamp: new Date().toISOString()
       };
       await this.tourService.createReview(event.tourId, review);
-      this.getUserAppliedTours();
+      this.loadUserAppliedTours();
     }
     this.closeReviewModal();
   }

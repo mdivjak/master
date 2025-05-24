@@ -21,7 +21,14 @@ export interface Tour {
 }
 
 export interface Application {
+tourId: string;
+  tourName: string;
+  tourDate: string; // Or consider Firestore Timestamp
+  tourPhoto?: string;
+  clubName: string;
+  clubId: string; // To easily identify the club if needed from application context
     userId: string;
+id?: string; // Document ID of the application
     userName: string;
     userPhoto: string;
 

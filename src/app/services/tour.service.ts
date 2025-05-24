@@ -44,33 +44,50 @@ export class TourService {
 
   // APPLICATIONS SECTION
 
-  async applyForTour(tourId: string, userId: string, userName: string, userPhoto: string, clubId: string, tourName: string) {
+  async applyForTour(tourId: string, userId: string, userName: string, userPhoto: string) {
+    const tourDocRef = doc(this.firestore, 'tours', tourId);
+    const tourDoc = await getDoc(tourDocRef);
+
+    if (!tourDoc.exists()) {
+      this.loggingService.error(`Tour with ID ${tourId} not found.`);
+      throw new Error(`Tour with ID ${tourId} not found.`);
+      // Or return an appropriate response/status
+    }
+
+    const tourData = tourDoc.data() as Tour;
+
     let application: Application  = {
       userId: userId,
       userName: userName,
       userPhoto: userPhoto,
-      
       status: "pending",
       timestamp: new Date().toISOString(),
-      declinedMessage: ""
+      declinedMessage: "",
+      // Denormalized fields
+      tourId: tourId,
+      tourName: tourData.name,
+      tourDate: tourData.date, // Ensure this matches the type in Tour model, adjust if Firestore Timestamp
+      tourPhoto: tourData.photo,
+      clubName: tourData.clubName,
+      clubId: tourData.clubId,
     };
 
     await setDoc(doc(this.firestore, `tours/${tourId}/applications`, userId), application);
   
-    // Notify the club
-    if (clubId && tourName) {
+    // Notify the club using denormalized data
+    if (tourData.clubId && tourData.name) {
       try {
         await this.notificationService.sendNotification(
-          clubId,
+          tourData.clubId,
           'application',
-          `New application for your tour: ${tourName} from ${userName}`
+          `New application for your tour: ${tourData.name} from ${userName}`
         );
-        this.loggingService.info(`Notification sent to club ${clubId} for tour ${tourName}`);
+        this.loggingService.info(`Notification sent to club ${tourData.clubId} for tour ${tourData.name}`);
       } catch (error) {
         this.loggingService.error('Error sending notification to club:', error);
       }
     } else {
-      this.loggingService.warn(`ClubId or TourName missing for tour ${tourId}. ClubId: ${clubId}, TourName: ${tourName}`);
+      this.loggingService.warn(`ClubId or TourName missing in tourData for tour ${tourId}. ClubId: ${tourData.clubId}, TourName: ${tourData.name}`);
     }
   }
 
@@ -165,25 +182,25 @@ export class TourService {
   //   return tourSnapshot.exists() ? tourSnapshot.data()?.['participants'] || [] : [];
   // }
   
-  async getUserAppliedTours(userId: string) {
+  async getUserAppliedTours(userId: string): Promise<Application[]> {
     const applicationsQuery = query(
       collectionGroup(this.firestore, 'applications'),
       where('userId', '==', userId)
     );
     const querySnapshot = await getDocs(applicationsQuery);
   
-    const applications = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Application));
-    const tourIds = querySnapshot.docs.map(doc => doc.ref.parent.parent?.id).filter(id => id !== undefined) as string[];
+    const appliedTours = querySnapshot.docs.map(doc => {
+      const applicationData = doc.data() as Application;
+      // The 'id' of the application document itself is doc.id
+      // This can be used as 'applicationId' in the component.
+      // The Application model now contains all denormalized tour info.
+      return {
+        id: doc.id, // This is the applicationId
+        ...applicationData
+      } as Application; // Casting to Application, assuming 'id' is an acceptable field or will be handled
+    });
   
-    const tours = await Promise.all(tourIds.map(async tourId => {
-      const tourDoc = await getDoc(doc(this.firestore, 'tours', tourId));
-      return tourDoc.exists() ? { id: tourDoc.id, ...tourDoc.data() } as Tour : null;
-    }));
-  
-    return {
-      tours: tours.filter(tour => tour !== null) as Tour[],
-      applications
-    };
+    return appliedTours;
   }
 
   async createReview(tourId: string, review: Review) {
