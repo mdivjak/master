@@ -6,7 +6,7 @@
   - [x] test this manually
 - [x] N+1 Query Pattern in `TourService.getUserAppliedTours()` leading to potential performance issues.
 - [ ] Lack of Automatic Data Propagation for Denormalized User/Club Information.
-- [ ] Display of Tour Reviews is not implemented in the UI.
+- [x] Display of Tour Reviews is not implemented in the UI.
 - [ ] Potentially Redundant `removeTourParticipant` call in `MyToursComponent.cancelApplication()`.
 
 ## Detailed Analysis
