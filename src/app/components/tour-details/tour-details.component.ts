@@ -102,6 +102,32 @@ export class TourDetailsComponent {
     }
   }
 
+async cancelMyApplication() {
+    const currentUser = this.authService.currentUser;
+    if (currentUser && this.tourId && this.application && (this.application.status === 'pending' || this.application.status === 'accepted')) {
+      try {
+        this.loggingService.debug('TourDetailsComponent Canceling application for tour:', this.tourId, 'User ID:', currentUser.uid);
+        await this.tourService.cancelUserApplication(this.tourId, currentUser.uid);
+
+        // Update local state to reflect cancellation
+        this.hasApplied = false;
+        // this.applicationStatus = 'canceled'; // Or fetch fresh status
+        this.application = null!; // Clear the local application object
+        // Or call this.checkApplication(this.tourId, currentUser.uid) again to refresh state from DB.
+        // Let's use checkApplication for consistency:
+        await this.checkApplication(this.tourId, currentUser.uid);
+
+        // Optionally, show a success message/toast
+        this.loggingService.info('Application canceled successfully.');
+
+      } catch (error) {
+        this.loggingService.error('Failed to cancel application:', error);
+        // Optionally, show an error message/toast
+      }
+    } else {
+      this.loggingService.warn('Cannot cancel application. Conditions not met or user not logged in.');
+    }
+  }
   private async loadTourReviews(): Promise<void> {
     if (this.tourId) {
       this.loggingService.debug('TourDetailsComponent Loading reviews for tour:', this.tourId);

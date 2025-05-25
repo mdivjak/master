@@ -121,6 +121,38 @@ export class TourService {
     //   createdAt: new Date()
     // });
   }
+async cancelUserApplication(tourId: string, userId: string): Promise<void> {
+    const appRef = doc(this.firestore, `tours/${tourId}/applications/${userId}`);
+    const appSnap = await getDoc(appRef);
+
+    let wasAccepted = false;
+    if (appSnap.exists()) {
+      const applicationData = appSnap.data() as { status?: string }; // Adjust type as needed
+      if (applicationData.status === 'accepted') {
+        wasAccepted = true;
+      }
+    } else {
+      console.warn(`Application with ID ${userId} for tour ${tourId} not found during cancellation.`);
+      // For now, let's proceed to ensure status update is attempted if app was created between get and update.
+    }
+
+    // Update application status to 'canceled'
+    // It's important this is called regardless of whether the app was found initially,
+    // as it might have been created between the getDoc and this point,
+    // or to handle cases where an application record needs to be explicitly marked 'canceled' even if not fully processed.
+    await this.updateApplicationStatus(tourId, userId, "canceled", "");
+
+    // If user was accepted, remove them from the tour's participant list
+    if (wasAccepted) {
+      try {
+        await this.removeTourParticipant(tourId, userId);
+      } catch (error) {
+        console.error(`Error removing accepted participant ${userId} from tour ${tourId} during cancellation:`, error);
+        // Decide if this error should be re-thrown or if cancellation is still "successful"
+        // For this iteration, we log the error and continue, considering the cancellation of application status primary.
+      }
+    }
+  }
 
   async addTourParticipant(tourId: string, userId: string, userName: string, userPhoto: string) {
     const tourDocRef = doc(this.firestore, 'tours', tourId);

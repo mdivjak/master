@@ -7,7 +7,7 @@
 - [x] N+1 Query Pattern in `TourService.getUserAppliedTours()` leading to potential performance issues.
 - [ ] Lack of Automatic Data Propagation for Denormalized User/Club Information.
 - [x] Display of Tour Reviews is not implemented in the UI.
-- [ ] Potentially Redundant `removeTourParticipant` call in `MyToursComponent.cancelApplication()`.
+- [x] Potentially Redundant `removeTourParticipant` call in `MyToursComponent.cancelApplication()`.
 
 ## Detailed Analysis
 
@@ -48,6 +48,7 @@
 ### 5. Potentially Redundant `removeTourParticipant` call in `MyToursComponent.cancelApplication()`
    - **Description:** When a hiker cancels their application using `MyToursComponent.cancelApplication()`, the method calls both `TourService.updateApplicationStatus()` to set the application status to "canceled" and `TourService.removeTourParticipant()` to remove them from the tour's participant arrays.
    - **Impact:** If the application was still "pending" and the user had not yet been accepted (i.e., their ID was not in the tour's `participantsIds` array), the call to `removeTourParticipant` would be redundant and attempt to remove a non-existent entry. This is a minor issue but could be optimized for cleaner logic and to avoid unnecessary Firestore writes (if `removeTourParticipant` attempts a write even if the ID isn't found).
+   - **Resolution:** Refactored the logic into a new `TourService.cancelUserApplication(tourId, userId)` method. This service method now correctly handles checking the application status and conditionally removing the participant if they were 'accepted', then updates the application status to 'canceled'. The UI for canceling an application was implemented in `TourDetailsComponent` which now calls this new service method. The original `MyToursComponent.cancelApplication()` method was removed as it was unused by its template. This resolves the potential redundancy and ensures correct behavior.
    - **Relevant Code:**
      - Component method: [`MyToursComponent.cancelApplication()`](src/app/components/my-tours/my-tours.component.ts:37), lines 38-39.
      - Service method: [`TourService.removeTourParticipant()`](src/app/services/tour.service.ts:127)

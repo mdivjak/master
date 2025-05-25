@@ -37,18 +37,6 @@ export class MyToursComponent {
     }
   }
 
-  async cancelApplication(tourId: string, applicationId: string) {
-    // applicationId is the doc.id of the application, which is userId in the context of tours/{tourId}/applications/{userId}
-    if (this.authService.currentUser?.uid === applicationId) {
-      await this.tourService.updateApplicationStatus(tourId, applicationId, "canceled", "");
-      // Assuming removeTourParticipant also uses userId which is applicationId here
-      await this.tourService.removeTourParticipant(tourId, applicationId);
-      this.loadUserAppliedTours(); // Refresh the list
-    } else {
-      this.loggingService.error('User ID mismatch or no user logged in. Cannot cancel application.');
-    }
-  }
-
   openReviewModal(tourId: string) {
     this.selectedTourId = tourId;
     this.showReviewModal = true;
