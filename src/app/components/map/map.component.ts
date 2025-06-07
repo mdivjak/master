@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as L from 'leaflet';
+import { Icon } from 'leaflet';
 import 'leaflet-gpx';
 
 @Component({
@@ -13,7 +14,16 @@ export class MapComponent implements OnInit, AfterViewInit{
   @Input() gpxContent!: string;
   private map!: L.Map;
 
-  constructor() {}
+  constructor() {
+    delete (Icon.Default.prototype as any)._getIconUrl;
+    
+    // Set custom icon paths relative to deployUrl
+    Icon.Default.mergeOptions({
+      iconRetinaUrl: 'leaflet-images/marker-icon-2x.png',
+      iconUrl: 'leaflet-images/marker-icon.png',
+      shadowUrl: 'leaflet-images/marker-shadow.png'
+    });
+  }
 
   async ngOnInit() {}
   
