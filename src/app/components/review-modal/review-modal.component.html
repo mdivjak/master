@@ -1,19 +1,120 @@
-<div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-  <div class="bg-white p-8 rounded-lg shadow-lg w-1/2">
-    <h2 class="text-2xl font-bold mb-6">Submit Review</h2>
-    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
-      <div class="mb-6">
-        <label class="block text-gray-700 text-lg">Review</label>
-        <textarea formControlName="review" class="w-full p-3 border rounded" rows="5"></textarea>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 bg-stone-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+  <!-- Modal Container -->
+  <div class="card-nature w-full max-w-lg animate-scale-in" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between p-6 border-b border-stone-200">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-sunset-gradient rounded-xl flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-heading font-bold text-stone-900">Rate Your Adventure</h2>
+          <p class="text-sm text-stone-600">Share your hiking experience</p>
+        </div>
       </div>
-      <div class="mb-6">
-        <label class="block text-gray-700 text-lg">Rating</label>
-        <select formControlName="rating" class="w-full p-3 border rounded">
-          <option *ngFor="let rating of [1, 2, 3, 4, 5]" [value]="rating">{{ rating }}</option>
-        </select>
+      
+      <!-- Close Button -->
+      <button (click)="closeModal()"
+              class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-stone-100 transition-colors duration-200">
+        <svg class="w-5 h-5 text-stone-400 hover:text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="p-6 space-y-6">
+      
+      <!-- Interactive Star Rating -->
+      <div class="space-y-3">
+        <label class="block text-sm font-medium text-stone-700">
+          How was your experience?
+        </label>
+        <div class="flex items-center space-x-2">
+          <div class="flex space-x-1">
+            <button *ngFor="let star of [1, 2, 3, 4, 5]; let i = index"
+                    type="button"
+                    (click)="setRating(star)"
+                    (mouseenter)="hoveredRating = star"
+                    (mouseleave)="hoveredRating = 0"
+                    class="focus:outline-none transition-transform duration-150 hover:scale-110">
+              <svg class="w-8 h-8 transition-colors duration-200"
+                   [class]="(hoveredRating > 0 ? hoveredRating : selectedRating) >= star ? 'text-sunset-400' : 'text-stone-300'"
+                   fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            </button>
+          </div>
+          <span class="text-sm text-stone-600 ml-3">
+            {{ getRatingText(hoveredRating > 0 ? hoveredRating : selectedRating) }}
+          </span>
+        </div>
       </div>
-      <div class="flex justify-end">
-        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700" [disabled]="!reviewForm.valid">Submit</button>
+
+      <!-- Review Text Area -->
+      <div class="space-y-2">
+        <label for="review" class="block text-sm font-medium text-stone-700">
+          Tell us about your adventure
+        </label>
+        <div class="relative">
+          <textarea
+            id="review"
+            formControlName="review"
+            rows="4"
+            placeholder="What made this hiking tour special? Share highlights, challenges, scenery, group dynamics, or any memorable moments..."
+            class="input-nature resize-none"
+          ></textarea>
+          <div class="absolute bottom-3 right-3 text-xs text-stone-400">
+            {{ reviewForm.get('review')?.value?.length || 0 }} / 500
+          </div>
+        </div>
+        <p class="text-xs text-stone-500">
+          Help other hikers by sharing specific details about the trail, difficulty, and overall experience.
+        </p>
+      </div>
+
+      <!-- Tips Section -->
+      <div class="bg-forest-50 border border-forest-200 rounded-xl p-4">
+        <div class="flex items-start space-x-3">
+          <svg class="w-5 h-5 text-forest-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <div class="text-sm text-forest-800">
+            <p class="font-medium mb-1">Writing a helpful review:</p>
+            <ul class="text-xs space-y-1 text-forest-700">
+              <li>• Mention trail conditions and difficulty</li>
+              <li>• Describe the scenery and photo opportunities</li>
+              <li>• Rate the organization and guide quality</li>
+              <li>• Include any safety considerations</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-stone-200">
+        <button type="button"
+                (click)="closeModal()"
+                class="btn-outline-nature flex-1">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          Cancel
+        </button>
+        <button type="submit"
+                [disabled]="!reviewForm.valid || selectedRating === 0"
+                class="btn-sunset flex-1 disabled:opacity-50 disabled:cursor-not-allowed">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+          </svg>
+          Submit Review
+        </button>
       </div>
     </form>
   </div>

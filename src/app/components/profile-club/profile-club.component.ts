@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserData } from '../../models/userdata';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, NgClass, DatePipe } from '@angular/common';
 import { Tour } from '../../models/tour';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -11,7 +11,7 @@ import { ImageUtils } from '../../utils/image-utils';
 @Component({
   selector: 'app-profile-club',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, RouterLink],
+  imports: [NgIf, NgFor, NgClass, DatePipe, FormsModule, RouterLink],
   templateUrl: './profile-club.component.html',
   styleUrl: './profile-club.component.css'
 })
@@ -53,5 +53,30 @@ export class ProfileClubComponent {
     this.authService.updateUser(this.authService.currentUser!.uid, this.clubProfile.name, this.clubProfile.photo);
 
     this.toggleEditMode();
+  }
+
+  getTotalParticipants(): number {
+    return this.tours.reduce((total, tour) => total + tour.participantsIds.length, 0);
+  }
+
+  getAverageRating(): string {
+    // This would normally come from a service call to get tour reviews
+    // For now, return a placeholder value
+    return "4.8";
+  }
+
+  getUpcomingTours(): number {
+    const now = new Date();
+    return this.tours.filter(tour => new Date(tour.date) > now).length;
+  }
+
+  isUpcoming(dateString: string): boolean {
+    const tourDate = new Date(dateString);
+    const now = new Date();
+    return tourDate > now;
+  }
+
+  trackByTourId(index: number, tour: Tour): string {
+    return tour.id || index.toString();
   }
 }

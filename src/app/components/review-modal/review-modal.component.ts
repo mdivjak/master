@@ -14,14 +14,39 @@ import { Review } from '../../models/tour'; // Added - Assuming Review model exi
 export class ReviewModalComponent {
   @Input() tourId!: string;
   @Output() reviewSubmitted = new EventEmitter<{ tourId: string, reviewPayload: Review }>(); // Updated
+  @Output() modalClosed = new EventEmitter<void>();
+  
   reviewForm: FormGroup;
+  selectedRating: number = 0;
+  hoveredRating: number = 0;
   private authService = inject(AuthService);
 
   constructor(private fb: FormBuilder) {
     this.reviewForm = this.fb.group({
-      review: ['', Validators.required],
+      review: ['', [Validators.required, Validators.maxLength(500)]],
       rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]]
     });
+  }
+
+  setRating(rating: number): void {
+    this.selectedRating = rating;
+    this.reviewForm.patchValue({ rating });
+  }
+
+  getRatingText(rating: number): string {
+    const ratingTexts = {
+      0: 'Select a rating',
+      1: 'Poor - Not recommended',
+      2: 'Fair - Below expectations',
+      3: 'Good - Met expectations',
+      4: 'Very Good - Exceeded expectations',
+      5: 'Excellent - Outstanding experience!'
+    };
+    return ratingTexts[rating as keyof typeof ratingTexts] || 'Select a rating';
+  }
+
+  closeModal(): void {
+    this.modalClosed.emit();
   }
 
   submitReview() {

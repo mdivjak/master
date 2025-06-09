@@ -1,19 +1,146 @@
-<li class="relative">
-
-  <button (click)="toggleNotifications()" class="text-white hover:text-gray-400">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+<div class="relative">
+  <!-- Notification Bell Button -->
+  <button (click)="toggleNotifications()"
+          class="relative p-2 rounded-xl text-white hover:text-white/90 hover:bg-white/10 transition-all duration-200 backdrop-blur-subtle focus:outline-none focus:ring-2 focus:ring-white/30">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
     </svg>
-    <span *ngIf="unreadNotficationsMarker" class="animate-ping absolute top-1 right-0.5 block h-1 w-1 rounded-full ring-2 ring-green-400 bg-green-600"></span>
+    
+    <!-- Notification Badge -->
+    <span *ngIf="unreadNotficationsMarker"
+          class="absolute -top-1 -right-1 w-5 h-5 bg-sunset-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white animate-pulse">
+      {{ getUnreadCount() }}
+    </span>
   </button>
-  
-  <i class="fa-solid fa-bell"></i>
 
-  <div *ngIf="showNotifications" class="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg">
-    <ul>
-      <li *ngFor="let notification of notifications" class="p-4 border-b">
-          <p (click)="markAsRead(notification)" [ngClass]="{'font-bold': !notification.read}">{{ notification.message }}</p>
-      </li>
-    </ul>
+  <!-- Notification Dropdown -->
+  <div *ngIf="showNotifications"
+       class="absolute right-0 mt-3 w-80 sm:w-96 z-50 animate-slide-up">
+    <!-- Dropdown Arrow -->
+    <div class="absolute -top-2 right-4 w-4 h-4 bg-white transform rotate-45 border-t border-l border-stone-200"></div>
+    
+    <!-- Dropdown Content -->
+    <div class="bg-white rounded-2xl shadow-nature-lg border border-stone-200 overflow-hidden">
+      
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-forest-50 to-mountain-50 px-6 py-4 border-b border-stone-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-heading font-bold text-stone-900">Notifications</h3>
+            <p class="text-sm text-stone-600">{{ notifications.length }} total, {{ getUnreadCount() }} unread</p>
+          </div>
+          
+          <!-- Mark All Read Button -->
+          <button *ngIf="getUnreadCount() > 0"
+                  (click)="markAllAsRead()"
+                  class="text-sm text-forest-600 hover:text-forest-700 font-medium transition-colors duration-200">
+            Mark all read
+          </button>
+        </div>
+      </div>
+
+      <!-- Notifications List -->
+      <div class="max-h-80 overflow-y-auto">
+        <div *ngIf="notifications.length > 0; else noNotifications">
+          <div *ngFor="let notification of notifications; trackBy: trackByNotificationId"
+               (click)="markAsRead(notification)"
+               class="px-6 py-4 border-b border-stone-100 last:border-b-0 hover:bg-stone-50 cursor-pointer transition-colors duration-200"
+               [class.bg-forest-50]="!notification.read">
+            
+            <div class="flex items-start space-x-3">
+              <!-- Notification Icon -->
+              <div class="flex-shrink-0 mt-1">
+                <div [ngClass]="{
+                  'bg-forest-100 text-forest-600': getNotificationType(notification) === 'success',
+                  'bg-sunset-100 text-sunset-600': getNotificationType(notification) === 'info',
+                  'bg-red-100 text-red-600': getNotificationType(notification) === 'warning',
+                  'bg-mountain-100 text-mountain-600': getNotificationType(notification) === 'default'
+                }" class="w-8 h-8 rounded-full flex items-center justify-center">
+                  
+                  <!-- Success Icon -->
+                  <svg *ngIf="getNotificationType(notification) === 'success'"
+                       class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  
+                  <!-- Info Icon -->
+                  <svg *ngIf="getNotificationType(notification) === 'info'"
+                       class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  
+                  <!-- Warning Icon -->
+                  <svg *ngIf="getNotificationType(notification) === 'warning'"
+                       class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.864-.833-2.634 0L3.18 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                  </svg>
+                  
+                  <!-- Default Icon -->
+                  <svg *ngIf="getNotificationType(notification) === 'default'"
+                       class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Notification Content -->
+              <div class="flex-1 min-w-0">
+                <p class="text-sm text-stone-900 leading-relaxed"
+                   [class.font-semibold]="!notification.read">
+                  {{ notification.message }}
+                </p>
+                
+                <div class="flex items-center justify-between mt-2">
+                  <time class="text-xs text-stone-500">
+                    {{ getTimeAgo(notification.timestamp) }}
+                  </time>
+                  
+                  <!-- Unread Indicator -->
+                  <div *ngIf="!notification.read"
+                       class="w-2 h-2 bg-forest-500 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <ng-template #noNotifications>
+          <div class="px-6 py-12 text-center">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-forest-100 to-mountain-100 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-forest-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+              </svg>
+            </div>
+            <h4 class="text-lg font-medium text-stone-900 mb-2">No notifications yet</h4>
+            <p class="text-stone-600 text-sm">We'll notify you about tour updates, applications, and important announcements.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Footer Actions -->
+      <div *ngIf="notifications.length > 0"
+           class="bg-stone-50 px-6 py-3 border-t border-stone-200">
+        <div class="flex items-center justify-between">
+          <button class="text-sm text-stone-600 hover:text-stone-800 transition-colors duration-200">
+            Notification Settings
+          </button>
+          <button (click)="clearAllNotifications()"
+                  class="text-sm text-red-600 hover:text-red-700 transition-colors duration-200">
+            Clear All
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-</li>
+
+  <!-- Click Outside Overlay -->
+  <div *ngIf="showNotifications"
+       (click)="toggleNotifications()"
+       class="fixed inset-0 z-40"></div>
+</div>

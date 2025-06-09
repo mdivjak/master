@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { Notification } from '../../models/notification';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-notification-widget',
   standalone: true,
-  imports: [NgIf, NgFor, NgClass],
+  imports: [CommonModule],
   templateUrl: './notification-widget.component.html',
   styleUrl: './notification-widget.component.css'
 })
@@ -47,5 +47,62 @@ export class NotificationWidgetComponent {
     this.unreadNotficationsMarker = this.notifications.some(
       n => !n.read
     );
+  }
+
+  getUnreadCount(): number {
+    return this.notifications.filter(n => !n.read).length;
+  }
+
+  async markAllAsRead(): Promise<void> {
+    const unreadNotifications = this.notifications.filter(n => !n.read);
+    for (const notification of unreadNotifications) {
+      if (notification.id) {
+        await this.notificationService.markAsRead(this.authService.currentUser!.uid, notification.id);
+        notification.read = true;
+      }
+    }
+    this.unreadNotficationsMarker = false;
+  }
+
+  async clearAllNotifications(): Promise<void> {
+    // Implementation depends on your notification service
+    // For now, just clear locally
+    this.notifications = [];
+    this.unreadNotficationsMarker = false;
+  }
+
+  trackByNotificationId(index: number, notification: Notification): string {
+    return notification.id || index.toString();
+  }
+
+  getNotificationType(notification: Notification): string {
+    // Determine notification type based on message content or add a type property to Notification model
+    const message = notification.message.toLowerCase();
+    if (message.includes('accepted') || message.includes('approved')) {
+      return 'success';
+    } else if (message.includes('declined') || message.includes('rejected') || message.includes('cancelled')) {
+      return 'warning';
+    } else if (message.includes('application') || message.includes('request')) {
+      return 'info';
+    }
+    return 'default';
+  }
+
+  getTimeAgo(timestamp: string): string {
+    const now = new Date();
+    const notificationTime = new Date(timestamp);
+    const diffInMinutes = Math.floor((now.getTime() - notificationTime.getTime()) / (1000 * 60));
+    
+    if (diffInMinutes < 1) {
+      return 'Just now';
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
+    } else if (diffInMinutes < 1440) {
+      const hours = Math.floor(diffInMinutes / 60);
+      return `${hours}h ago`;
+    } else {
+      const days = Math.floor(diffInMinutes / 1440);
+      return `${days}d ago`;
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Application, Review, Tour } from '../../models/tour';
 import { TourService } from '../../services/tour.service';
 import { DatePipe, NgClass, NgFor, NgIf, DecimalPipe } from '@angular/common';
@@ -10,7 +10,7 @@ import { LoggingService } from '../../services/logging-service.service';
 @Component({
   selector: 'app-tour-details',
   standalone: true,
-  imports: [NgIf, NgClass, MapComponent, NgFor, DatePipe, DecimalPipe],
+  imports: [NgIf, NgClass, MapComponent, NgFor, DatePipe, DecimalPipe, RouterLink],
   templateUrl: './tour-details.component.html',
   styleUrl: './tour-details.component.css'
 })
