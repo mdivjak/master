@@ -1,6 +1,7 @@
 <div class="relative">
   <!-- Notification Bell Button -->
-  <button (click)="toggleNotifications()"
+  <button #notificationButton
+          (click)="toggleNotifications()"
           class="relative p-2 rounded-xl text-white hover:text-white/90 hover:bg-white/10 transition-all duration-200 backdrop-blur-subtle focus:outline-none focus:ring-2 focus:ring-white/30">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -16,7 +17,9 @@
 
   <!-- Notification Dropdown -->
   <div *ngIf="showNotifications"
-       class="absolute right-0 mt-3 w-80 sm:w-96 z-50 animate-slide-up">
+       class="notification-dropdown fixed w-80 sm:w-96 z-[9999] animate-slide-up"
+       [style.top]="dropdownPosition.top"
+       [style.right]="dropdownPosition.right">
     <!-- Dropdown Arrow -->
     <div class="absolute -top-2 right-4 w-4 h-4 bg-white transform rotate-45 border-t border-l border-stone-200"></div>
     
@@ -142,5 +145,5 @@
   <!-- Click Outside Overlay -->
   <div *ngIf="showNotifications"
        (click)="toggleNotifications()"
-       class="fixed inset-0 z-40"></div>
+       class="click-overlay fixed inset-0 z-[9998]"></div>
 </div>

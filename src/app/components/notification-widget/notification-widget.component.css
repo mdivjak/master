@@ -1,0 +1,42 @@
+/* Notification Widget Z-Index Hierarchy */
+/*
+ * Z-Index Scale (Updated for Fixed Positioning):
+ * - Notification Dropdown: z-[9999] (Maximum priority, fixed positioning)
+ * - Click Overlay: z-[9998] (Below dropdown, covers entire viewport)
+ * - Standard Modals: z-50 (Standard modals)
+ * - Navigation: z-20 (Fixed navigation)
+ * - Content: z-10 (Page content)
+ */
+
+/* Ensure proper stacking context for the notification widget */
+:host {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fixed positioning dropdown with maximum z-index */
+.notification-dropdown {
+  /* Force hardware acceleration for better performance */
+  transform: translateZ(0);
+  /* Ensure crisp rendering */
+  backface-visibility: hidden;
+  /* Ensure it breaks out of any stacking context */
+  isolation: isolate;
+}
+
+/* Full viewport overlay */
+.click-overlay {
+  /* Prevent pointer events on overlay itself except for clicks */
+  pointer-events: auto;
+  /* Ensure it covers everything except the dropdown */
+  background: transparent;
+}
+
+/* Dynamic positioning is handled in TypeScript */
+/* Responsive width adjustments */
+@media (max-width: 640px) {
+  .notification-dropdown {
+    width: calc(100vw - 2rem) !important;
+    max-width: 320px !important;
+  }
+}

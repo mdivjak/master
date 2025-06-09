@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NotificationService } from '../../services/notification.service';
 import { Notification } from '../../models/notification';
 import { CommonModule } from '@angular/common';
@@ -12,9 +12,12 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './notification-widget.component.css'
 })
 export class NotificationWidgetComponent {
+  @ViewChild('notificationButton', { static: false }) notificationButton!: ElementRef;
+  
   showNotifications: boolean = false;
   notifications: Notification[] = [];
   unreadNotficationsMarker: boolean = false;
+  dropdownPosition = { top: '4rem', right: '1rem' };
 
   constructor(
     private authService: AuthService,
@@ -31,6 +34,33 @@ export class NotificationWidgetComponent {
 
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.calculateDropdownPosition();
+    }
+  }
+
+  private calculateDropdownPosition() {
+    if (this.notificationButton) {
+      const buttonRect = this.notificationButton.nativeElement.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      
+      // Position dropdown below the button and aligned to its right edge
+      const top = buttonRect.bottom + 8; // 8px gap below button
+      let right = viewportWidth - buttonRect.right; // Align to button's right edge
+      
+      // Ensure dropdown doesn't go off-screen on mobile
+      if (viewportWidth < 640) {
+        right = 16; // 1rem on mobile
+      } else {
+        // Ensure minimum margin from screen edge
+        right = Math.max(right, 16);
+      }
+      
+      this.dropdownPosition = {
+        top: `${top}px`,
+        right: `${right}px`
+      };
+    }
   }
 
   async markAsRead(notification: Notification) {
