@@ -1,14 +1,121 @@
-<li class="flex mb-4 p-4 border rounded shadow hover:border-2">
-  <div class="flex-grow">
-    <h2 class="text-xl font-semibold">{{ tour.name }}</h2>
-    <p><strong>Date:</strong> {{ tour.date }}</p>
-    <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
-    <p><strong>Participants:</strong> {{ tour.maxParticipants }}</p>
-    <p><strong>Spots Left:</strong> {{ tour.maxParticipants - tour.participantsIds.length }}</p>
-    <div class="flex items-center mt-2">
-      <img *ngIf="tour.clubPhoto" [src]="tour.clubPhoto" alt="{{ tour.clubName }} photo" class="w-8 h-8 rounded-full mr-2">
-      <p *ngIf="tour.clubName" class="text-sm text-gray-600">{{ tour.clubName }}</p>
+<li class="card-nature group cursor-pointer transform transition-all duration-300 hover:scale-[1.02] animate-fade-in">
+  <div class="relative overflow-hidden">
+    <!-- Hero Image with Overlay -->
+    <div class="relative h-48 sm:h-56 overflow-hidden">
+      <img *ngIf="tour.photo"
+           [src]="tour.photo"
+           [alt]="tour.name + ' photo'"
+           class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+      <div *ngIf="!tour.photo"
+           class="w-full h-full bg-gradient-to-br from-forest-400 to-mountain-500 flex items-center justify-center">
+        <svg class="w-16 h-16 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 16l-4-4m0 0l4-4m-4 4h18M3 20l9-7 9 7"/>
+        </svg>
+      </div>
+      
+      <!-- Gradient overlay -->
+      <div class="overlay-nature"></div>
+      
+      <!-- Difficulty badge -->
+      <div class="absolute top-4 right-4">
+        <span [ngClass]="{
+          'badge-easy': tour.difficulty === 'easy',
+          'badge-moderate': tour.difficulty === 'moderate',
+          'badge-hard': tour.difficulty === 'hard'
+        }" class="flex items-center space-x-1 backdrop-blur-subtle">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path *ngIf="tour.difficulty === 'easy'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            <path *ngIf="tour.difficulty === 'moderate'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+            <path *ngIf="tour.difficulty === 'hard'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+          </svg>
+          <span class="text-xs font-medium capitalize">{{ tour.difficulty }}</span>
+        </span>
+      </div>
+      
+      <!-- Spots left indicator -->
+      <div class="absolute top-4 left-4">
+        <div class="bg-white/90 backdrop-blur-subtle rounded-full px-3 py-1 flex items-center space-x-1">
+          <svg class="w-4 h-4 text-forest-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span class="text-sm font-medium text-stone-700">
+            {{ tour.maxParticipants - tour.participantsIds.length }} left
+          </span>
+        </div>
+      </div>
+      
+      <!-- Tour title overlay -->
+      <div class="absolute bottom-0 left-0 right-0 p-4">
+        <h2 class="text-xl sm:text-2xl font-heading font-bold text-white text-shadow mb-1">
+          {{ tour.name }}
+        </h2>
+      </div>
+    </div>
+    
+    <!-- Card Content -->
+    <div class="p-6">
+      <!-- Date and basic info -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-2 text-stone-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <span class="font-medium">{{ tour.date | date:'mediumDate' }}</span>
+        </div>
+        <div class="flex items-center space-x-2 text-stone-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span class="font-medium">{{ tour.maxParticipants }} max</span>
+        </div>
+      </div>
+      
+      <!-- Club information -->
+      <div *ngIf="tour.clubName" class="flex items-center space-x-3 mb-4 p-3 bg-stone-50 rounded-xl">
+        <div class="flex-shrink-0">
+          <img *ngIf="tour.clubPhoto"
+               [src]="tour.clubPhoto"
+               [alt]="tour.clubName + ' photo'"
+               class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">
+          <div *ngIf="!tour.clubPhoto"
+               class="w-10 h-10 bg-gradient-to-br from-forest-400 to-mountain-500 rounded-full flex items-center justify-center">
+            <span class="text-white font-bold text-sm">{{ tour.clubName.charAt(0).toUpperCase() }}</span>
+          </div>
+        </div>
+        <div class="flex-grow min-w-0">
+          <p class="text-sm font-medium text-stone-900 truncate">{{ tour.clubName }}</p>
+          <p class="text-xs text-stone-500">Tour Organizer</p>
+        </div>
+      </div>
+      
+      <!-- Action buttons -->
+      <div class="flex space-x-3 pt-4 border-t border-stone-100">
+        <button class="btn-nature flex-1 text-sm py-2 px-4">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+          View Details
+        </button>
+        <button class="btn-outline-nature text-sm py-2 px-4"
+                [class.opacity-50]="tour.maxParticipants - tour.participantsIds.length === 0"
+                [disabled]="tour.maxParticipants - tour.participantsIds.length === 0">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+          </svg>
+          Join
+        </button>
+      </div>
     </div>
   </div>
-  <img *ngIf="tour.photo" [src]="tour.photo" alt="{{ tour.name }} photo" class="w-auto h-36 mb-4 rounded" style="object-fit: cover;">
 </li>

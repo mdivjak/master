@@ -15,6 +15,7 @@ import { NotificationWidgetComponent } from '../notification-widget/notification
 })
 export class NavbarComponent {
   user$: Observable<User | null>;
+  mobileMenuOpen = false;
 
   constructor(
     private authService: AuthService,
@@ -33,6 +34,10 @@ export class NavbarComponent {
   }
 
   ngOnInit(): void {}
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
 
   async logout() {
     await this.authService.logout();

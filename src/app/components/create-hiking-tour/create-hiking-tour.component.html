@@ -1,109 +1,275 @@
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Create Hiking Tour</h1>
-    <form (ngSubmit)="onSubmit()" #tourForm="ngForm">
-      <!-- Tour Name -->
-      <div class="mb-4">
-        <label for="name" class="block text-sm font-medium text-gray-700">Tour Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          [(ngModel)]="tour.name"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+<div class="min-h-screen bg-gradient-to-br from-stone-50 via-forest-50/20 to-mountain-50/20">
+  <!-- Header Section -->
+  <div class="bg-nature-gradient py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-subtle">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
       </div>
-  
-      <!-- Date -->
-      <div class="mb-4">
-        <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
-        <input
-          type="date"
-          id="date"
-          name="date"
-          [(ngModel)]="tour.date"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-  
-      <!-- Description -->
-      <div class="mb-4">
-        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          [(ngModel)]="tour.description"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        ></textarea>
-      </div>
-  
-      <!-- GPX File -->
-      <div class="mb-4">
-        <label for="gpxFile" class="block text-sm font-medium text-gray-700">GPX File</label>
-        <input
-          type="file"
-          id="gpxFile"
-          name="gpxFile"
-          (change)="onFileChange($event)"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <!-- Photos Field -->
-      <div class="mb-4">
-        <label for="photos" class="block text-sm font-medium text-gray-700">Photos</label>
-        <input
-          type="file"
-          id="photos"
-          (change)="onPhotosChange($event)"
-          accept="image/*"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-  
-      <!-- Difficulty Level -->
-      <div class="mb-4">
-        <label for="difficulty" class="block text-sm font-medium text-gray-700">Difficulty Level</label>
-        <select
-          id="difficulty"
-          name="difficulty"
-          [(ngModel)]="tour.difficulty"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="easy">Easy</option>
-          <option value="moderate">Moderate</option>
-          <option value="hard">Hard</option>
-        </select>
-      </div>
-  
-      <!-- Number of Participants -->
-      <div class="mb-4">
-        <label for="participants" class="block text-sm font-medium text-gray-700">Number of Participants</label>
-        <input
-          type="number"
-          id="participants"
-          name="participants"
-          [(ngModel)]="tour.maxParticipants"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-  
-      <!-- Submit Button -->
-      <div class="mt-4">
-        <button
-          type="submit"
-          [disabled]="tourForm.invalid"
-          class="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Create Tour
-        </button>
-      </div>
-    </form>
-    <p class="text-red-600 mt-4 text-center">{{message}}</p>
+      <h1 class="text-4xl sm:text-5xl font-heading font-bold text-white text-shadow mb-4">
+        Create New Adventure
+      </h1>
+      <p class="text-xl text-white/90 max-w-2xl mx-auto">
+        Share an amazing hiking experience with fellow adventurers and create lasting memories
+      </p>
+    </div>
   </div>
+
+  <!-- Form Section -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="card-nature p-8">
+      <form (ngSubmit)="onSubmit()" #tourForm="ngForm" class="space-y-8">
+        
+        <!-- Basic Information Section -->
+        <div class="space-y-6">
+          <div class="border-b border-stone-200 pb-4">
+            <h2 class="text-2xl font-heading font-bold text-stone-900 mb-2">Basic Information</h2>
+            <p class="text-stone-600">Tell us about your hiking tour</p>
+          </div>
+
+          <!-- Tour Name -->
+          <div class="space-y-2">
+            <label for="name" class="block text-sm font-medium text-stone-700">
+              Tour Name *
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 16l-4-4m0 0l4-4m-4 4h18M3 20l9-7 9 7"/>
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                [(ngModel)]="tour.name"
+                required
+                placeholder="Enter a descriptive name for your tour"
+                class="input-nature pl-10"
+              />
+            </div>
+          </div>
+    
+          <!-- Date -->
+          <div class="space-y-2">
+            <label for="date" class="block text-sm font-medium text-stone-700">
+              Tour Date *
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                [(ngModel)]="tour.date"
+                required
+                class="input-nature pl-10"
+              />
+            </div>
+          </div>
+    
+          <!-- Description -->
+          <div class="space-y-2">
+            <label for="description" class="block text-sm font-medium text-stone-700">
+              Description *
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              [(ngModel)]="tour.description"
+              required
+              rows="4"
+              placeholder="Describe the tour route, highlights, what to expect, and any special requirements..."
+              class="input-nature resize-none"
+            ></textarea>
+            <p class="text-sm text-stone-500">
+              Include details about the trail, scenery, difficulty points, and what makes this tour special
+            </p>
+          </div>
+        </div>
+
+        <!-- Tour Details Section -->
+        <div class="space-y-6">
+          <div class="border-b border-stone-200 pb-4">
+            <h2 class="text-2xl font-heading font-bold text-stone-900 mb-2">Tour Details</h2>
+            <p class="text-stone-600">Configure the specifics of your adventure</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Difficulty Level -->
+            <div class="space-y-2">
+              <label for="difficulty" class="block text-sm font-medium text-stone-700">
+                Difficulty Level *
+              </label>
+              <div class="relative">
+                <select
+                  id="difficulty"
+                  name="difficulty"
+                  [(ngModel)]="tour.difficulty"
+                  required
+                  class="input-nature appearance-none pr-10"
+                >
+                  <option value="" disabled selected>Select difficulty</option>
+                  <option value="easy">🟢 Easy - Suitable for beginners</option>
+                  <option value="moderate">🟡 Moderate - Some experience required</option>
+                  <option value="hard">🔴 Hard - Experienced hikers only</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Number of Participants -->
+            <div class="space-y-2">
+              <label for="participants" class="block text-sm font-medium text-stone-700">
+                Max Participants *
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                  </svg>
+                </div>
+                <input
+                  type="number"
+                  id="participants"
+                  name="participants"
+                  [(ngModel)]="tour.maxParticipants"
+                  required
+                  min="1"
+                  max="50"
+                  placeholder="Maximum number of hikers"
+                  class="input-nature pl-10"
+                />
+              </div>
+              <p class="text-sm text-stone-500">
+                Consider safety and group management when setting the limit
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Files Section -->
+        <div class="space-y-6">
+          <div class="border-b border-stone-200 pb-4">
+            <h2 class="text-2xl font-heading font-bold text-stone-900 mb-2">Route & Media</h2>
+            <p class="text-stone-600">Upload your GPS track and tour photos</p>
+          </div>
+
+          <!-- GPX File -->
+          <div class="space-y-2">
+            <label for="gpxFile" class="block text-sm font-medium text-stone-700">
+              GPX Route File *
+            </label>
+            <div class="flex items-center justify-center w-full">
+              <label for="gpxFile"
+                     class="flex flex-col items-center justify-center w-full h-32 border-2 border-forest-300 border-dashed rounded-xl cursor-pointer bg-forest-50 hover:bg-forest-100 transition-colors duration-200">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                  <svg class="w-8 h-8 mb-2 text-forest-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                  </svg>
+                  <p class="mb-2 text-sm text-forest-700">
+                    <span class="font-semibold">Click to upload</span> your GPX file
+                  </p>
+                  <p class="text-xs text-forest-600">GPX files only</p>
+                </div>
+                <input
+                  id="gpxFile"
+                  name="gpxFile"
+                  type="file"
+                  accept=".gpx"
+                  (change)="onFileChange($event)"
+                  required
+                  class="hidden"
+                />
+              </label>
+            </div>
+            <p class="text-sm text-stone-500">
+              Upload the GPS track of your hiking route. This helps participants prepare and navigate.
+            </p>
+          </div>
+
+          <!-- Photos Field -->
+          <div class="space-y-2">
+            <label for="photos" class="block text-sm font-medium text-stone-700">
+              Tour Photos
+            </label>
+            <div class="flex items-center justify-center w-full">
+              <label for="photos"
+                     class="flex flex-col items-center justify-center w-full h-32 border-2 border-sunset-300 border-dashed rounded-xl cursor-pointer bg-sunset-50 hover:bg-sunset-100 transition-colors duration-200">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                  <svg class="w-8 h-8 mb-2 text-sunset-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  <p class="mb-2 text-sm text-sunset-700">
+                    <span class="font-semibold">Click to upload</span> tour photos
+                  </p>
+                  <p class="text-xs text-sunset-600">PNG, JPG or JPEG</p>
+                </div>
+                <input
+                  id="photos"
+                  type="file"
+                  (change)="onPhotosChange($event)"
+                  accept="image/*"
+                  multiple
+                  class="hidden"
+                />
+              </label>
+            </div>
+            <p class="text-sm text-stone-500">
+              Add photos that showcase the beauty and highlights of this hiking route
+            </p>
+          </div>
+        </div>
+    
+        <!-- Submit Button -->
+        <div class="border-t border-stone-200 pt-8">
+          <div class="flex flex-col sm:flex-row gap-4 justify-end">
+            <button
+              type="button"
+              class="btn-outline-nature px-8 py-3"
+            >
+              Save as Draft
+            </button>
+            <button
+              type="submit"
+              [disabled]="tourForm.invalid"
+              class="btn-nature px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Create Adventure
+            </button>
+          </div>
+        </div>
+      </form>
+      
+      <!-- Message Display -->
+      <div *ngIf="message" class="mt-6 p-4 rounded-xl bg-red-50 border border-red-200">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-red-700 font-medium">{{ message }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   

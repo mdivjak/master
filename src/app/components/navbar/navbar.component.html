@@ -1,23 +1,113 @@
-<nav class="bg-gray-800 p-4">
-  <ul class="flex items-center space-x-4 w-full">
-    <!-- Title -->
-    <li><a routerLink="/" class="text-white text-lg hover:text-gray-400">Hiking Platform</a></li>
+<nav class="bg-nature-gradient shadow-nature-lg relative overflow-hidden">
+  <!-- Mountain silhouette background decoration -->
+  <div class="absolute inset-0 opacity-10">
+    <svg viewBox="0 0 1200 120" class="absolute bottom-0 w-full h-full">
+      <path d="M0,120 L0,60 L200,30 L400,80 L600,20 L800,70 L1000,40 L1200,90 L1200,120 Z"
+            fill="white" opacity="0.1"/>
+      <path d="M0,120 L0,80 L150,45 L350,95 L550,35 L750,85 L950,55 L1200,105 L1200,120 Z"
+            fill="white" opacity="0.05"/>
+    </svg>
+  </div>
+  
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo and brand -->
+      <div class="flex items-center space-x-3">
+        <div class="flex-shrink-0">
+          <!-- Hiking icon -->
+          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-subtle">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 16l-4-4m0 0l4-4m-4 4h18M3 20l9-7 9 7"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <a routerLink="/" class="text-white font-heading font-bold text-xl tracking-wide hover:text-white/90 transition-colors duration-200">
+            Adventure Trails
+          </a>
+          <div class="text-white/70 text-xs font-accent hidden sm:block">Discover Nature's Best</div>
+        </div>
+      </div>
 
-    <!-- Spacer to push the rest of the items to the right -->
-    <li class="flex-grow"></li>
+      <!-- Desktop Navigation -->
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-baseline space-x-4">
+          <!-- User-specific options -->
+          <ng-container *ngIf="user$ | async as user; else loggedOut">
+            <app-notification-widget></app-notification-widget>
+            
+            <!-- User Profile Menu -->
+            <div class="relative group">
+              <button (click)="goToProfile()"
+                      class="flex items-center space-x-2 text-white hover:text-white/90 transition-colors duration-200 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-subtle hover:bg-white/20">
+                <div class="w-8 h-8 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                  {{ (user.displayName || user.email || 'U').charAt(0).toUpperCase() }}
+                </div>
+                <span class="font-medium">Profile</span>
+              </button>
+            </div>
 
-    <!-- User-specific options -->
-    <ng-container *ngIf="user$ | async as user; else loggedOut">
-      <app-notification-widget></app-notification-widget>
-      <li><a (click)="goToProfile()" class="text-white hover:text-gray-400">Profile</a></li>
+            <button (click)="logout()"
+                    class="text-white hover:text-white/90 transition-colors duration-200 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-subtle hover:bg-white/20 font-medium">
+              Logout
+            </button>
+          </ng-container>
 
-      <li><a (click)="logout()" class="text-white hover:text-gray-400 cursor-pointer">Logout</a></li>
-    </ng-container>
+          <!-- Logged out options -->
+          <ng-template #loggedOut>
+            <a routerLink="/login"
+               class="text-white hover:text-white/90 transition-colors duration-200 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-subtle hover:bg-white/20 font-medium">
+              Login
+            </a>
+            <a routerLink="/register"
+               class="bg-sunset-500 hover:bg-sunset-600 text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 shadow-warm hover:shadow-lg transform hover:-translate-y-0.5">
+              Sign Up
+            </a>
+          </ng-template>
+        </div>
+      </div>
 
-    <!-- Logged out options -->
-    <ng-template #loggedOut>
-      <li><a routerLink="/login" class="text-white hover:text-gray-400">Login</a></li>
-      <li><a routerLink="/register" class="text-white hover:text-gray-400">Register</a></li>
-    </ng-template>
-  </ul>
+      <!-- Mobile menu button -->
+      <div class="md:hidden">
+        <button (click)="toggleMobileMenu()"
+                class="text-white hover:text-white/90 transition-colors duration-200 bg-white/10 p-2 rounded-xl backdrop-blur-subtle hover:bg-white/20">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path *ngIf="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            <path *ngIf="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div *ngIf="mobileMenuOpen" class="md:hidden animate-slide-up">
+      <div class="px-2 pt-2 pb-3 space-y-1 bg-white/10 backdrop-blur-subtle rounded-xl mt-2">
+        <ng-container *ngIf="user$ | async as user; else mobileLoggedOut">
+          <button (click)="goToProfile()"
+                  class="flex items-center space-x-3 text-white hover:text-white/90 hover:bg-white/10 px-3 py-2 rounded-lg text-base font-medium w-full transition-colors duration-200">
+            <div class="w-8 h-8 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
+              {{ (user.displayName || user.email || 'U').charAt(0).toUpperCase() }}
+            </div>
+            <span>Profile</span>
+          </button>
+          <button (click)="logout()"
+                  class="text-white hover:text-white/90 hover:bg-white/10 block px-3 py-2 rounded-lg text-base font-medium w-full text-left transition-colors duration-200">
+            Logout
+          </button>
+        </ng-container>
+
+        <ng-template #mobileLoggedOut>
+          <a routerLink="/login"
+             class="text-white hover:text-white/90 hover:bg-white/10 block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
+            Login
+          </a>
+          <a routerLink="/register"
+             class="bg-sunset-500 hover:bg-sunset-600 text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
+            Sign Up
+          </a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </nav>

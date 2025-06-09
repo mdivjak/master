@@ -31,4 +31,8 @@ export class HomeComponent implements OnInit {
   async ngOnInit() {
     this.tours = await this.tourService.getAllTours();
   }
+
+  trackByTourId(index: number, tour: Tour): string {
+    return tour.id || index.toString();
+  }
 }

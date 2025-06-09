@@ -1,4 +1,176 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom CSS Variables for Nature Theme */
+:root {
+  --color-forest-primary: #0f5132;
+  --color-mountain-primary: #1e40af;
+  --color-sunset-primary: #ff6b35;
+  --color-earth-primary: #8b4513;
+  --color-stone-primary: #6b7280;
+  
+  --shadow-nature: 0 4px 6px -1px rgba(15, 81, 50, 0.1), 0 2px 4px -1px rgba(15, 81, 50, 0.06);
+  --shadow-warm: 0 4px 6px -1px rgba(255, 107, 53, 0.1), 0 2px 4px -1px rgba(255, 107, 53, 0.06);
+  
+  --gradient-nature: linear-gradient(135deg, #0f5132 0%, #1e40af 100%);
+  --gradient-sunset: linear-gradient(135deg, #ff6b35 0%, #8b4513 100%);
+}
+
+/* Base Typography Improvements */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', 'Poppins', sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  
+  body {
+    @apply bg-stone-50 text-stone-800 antialiased;
+  }
+}
+
+/* Custom Component Classes */
+@layer components {
+  /* Button Variants */
+  .btn-nature {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-forest-500 hover:bg-forest-600 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2 transition-all duration-200 shadow-nature;
+  }
+  
+  .btn-mountain {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-mountain-500 hover:bg-mountain-600 focus:outline-none focus:ring-2 focus:ring-mountain-500 focus:ring-offset-2 transition-all duration-200 shadow-mountain;
+  }
+  
+  .btn-sunset {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-sunset-500 hover:bg-sunset-600 focus:outline-none focus:ring-2 focus:ring-sunset-500 focus:ring-offset-2 transition-all duration-200 shadow-warm;
+  }
+  
+  .btn-outline-nature {
+    @apply inline-flex items-center justify-center px-6 py-3 border-2 border-forest-500 text-base font-medium rounded-xl text-forest-600 bg-transparent hover:bg-forest-50 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2 transition-all duration-200;
+  }
+  
+  /* Card Variants */
+  .card-nature {
+    @apply bg-white rounded-2xl shadow-nature border border-stone-200 overflow-hidden transition-all duration-300 hover:shadow-nature-lg hover:-translate-y-1;
+  }
+  
+  .card-warm {
+    @apply bg-stone-50 rounded-2xl shadow-warm border border-stone-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  /* Input Styles */
+  .input-nature {
+    @apply block w-full px-4 py-3 border border-stone-300 rounded-xl shadow-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all duration-200 bg-white;
+  }
+  
+  /* Difficulty Badges */
+  .badge-easy {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-forest-100 text-forest-800 border border-forest-200;
+  }
+  
+  .badge-moderate {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-sunset-100 text-sunset-800 border border-sunset-200;
+  }
+  
+  .badge-hard {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 border border-red-200;
+  }
+  
+  /* Gradient Backgrounds */
+  .bg-nature-gradient {
+    background: var(--gradient-nature);
+  }
+  
+  .bg-sunset-gradient {
+    background: var(--gradient-sunset);
+  }
+  
+  /* Overlay Effects */
+  .overlay-dark {
+    @apply absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent;
+  }
+  
+  .overlay-nature {
+    @apply absolute inset-0 bg-gradient-to-t from-forest-900/60 via-forest-900/20 to-transparent;
+  }
+  
+  /* Animation Classes */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out;
+  }
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Utility Classes */
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .backdrop-blur-subtle {
+    backdrop-filter: blur(8px);
+  }
+  
+  .gradient-text {
+    background: var(--gradient-nature);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* Responsive Design Utilities */
+@media (max-width: 640px) {
+  .btn-nature,
+  .btn-mountain,
+  .btn-sunset,
+  .btn-outline-nature {
+    @apply px-4 py-2 text-sm;
+  }
+}
