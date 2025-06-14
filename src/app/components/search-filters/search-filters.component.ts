@@ -53,21 +53,16 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
     // Set initial values
     this.searchForm.patchValue(this.initialCriteria);
 
-    // Subscribe to search text changes with debounce
-    this.searchForm.get('searchText')?.valueChanges
+    // Subscribe to complete form changes
+    this.searchForm.valueChanges
       .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
+        debounceTime(300), // Debounce all changes
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
         takeUntil(this.destroy$)
       )
-      .subscribe(() => this.emitCriteria());
-
-    // Subscribe to other form changes immediately (except searchText)
-    ['difficulty', 'dateFrom', 'dateTo', 'hasAvailableSpots', 'clubName', 'sortBy', 'sortOrder'].forEach(controlName => {
-      this.searchForm.get(controlName)?.valueChanges
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.emitCriteria());
-    });
+      .subscribe((formValue) => {
+        this.emitCriteriaWithFormValue(formValue);
+      });
   }
 
   ngOnDestroy() {
@@ -75,26 +70,48 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private emitCriteria() {
-    const criteria: SearchCriteria = { ...this.searchForm.value };
+  private emitCriteriaWithFormValue(formValues: any) {
+    const criteria: SearchCriteria = {};
     
-    // Clean up empty values
-    Object.keys(criteria).forEach(key => {
-      const value = (criteria as any)[key];
-      if (value === '' || value === 'all' || value === null) {
-        delete (criteria as any)[key];
-      }
-    });
-
-    // Convert date strings to Date objects if present
-    if (criteria.dateFrom) {
-      criteria.dateFrom = new Date(criteria.dateFrom);
+    // Build criteria object with explicit field handling using passed formValues
+    if (formValues.searchText && formValues.searchText.trim()) {
+      criteria.searchText = formValues.searchText.trim();
     }
-    if (criteria.dateTo) {
-      criteria.dateTo = new Date(criteria.dateTo);
+    
+    if (formValues.difficulty && formValues.difficulty !== 'all') {
+      criteria.difficulty = formValues.difficulty;
+    }
+    
+    if (formValues.dateFrom && formValues.dateFrom.trim()) {
+      criteria.dateFrom = new Date(formValues.dateFrom);
+    }
+    
+    if (formValues.dateTo && formValues.dateTo.trim()) {
+      criteria.dateTo = new Date(formValues.dateTo);
+    }
+    
+    if (formValues.hasAvailableSpots) {
+      criteria.hasAvailableSpots = formValues.hasAvailableSpots;
+    }
+    
+    if (formValues.clubName && formValues.clubName.trim()) {
+      criteria.clubName = formValues.clubName.trim();
+    }
+    
+    if (formValues.sortBy) {
+      criteria.sortBy = formValues.sortBy;
+    }
+    
+    if (formValues.sortOrder) {
+      criteria.sortOrder = formValues.sortOrder;
     }
 
     this.criteriaChange.emit(criteria);
+  }
+
+  private emitCriteria() {
+    // Fallback method for direct calls (like from clear filters)
+    this.emitCriteriaWithFormValue(this.searchForm.value);
   }
 
   toggleAdvancedFilters() {
