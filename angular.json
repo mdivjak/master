@@ -30,7 +30,10 @@
               "./node_modules/leaflet/dist/leaflet.css",
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "./node_modules/leaflet/dist/leaflet.js",
+              "./node_modules/leaflet-gpx/gpx.js"
+            ],
             "baseHref": "/master/",
             "deployUrl": "/master/"
           },
@@ -49,6 +52,11 @@
                 }
               ],
               "outputHashing": "all",
+              "optimization": {
+                "scripts": false,
+                "styles": true,
+                "fonts": true
+              },
               "allowedCommonJsDependencies": [
                 "leaflet",
                 "leaflet-gpx"
@@ -95,7 +103,10 @@
               "./node_modules/leaflet/dist/leaflet.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/leaflet/dist/leaflet.js",
+              "./node_modules/leaflet-gpx/gpx.js"
+            ]
           }
         },
         "deploy": {
