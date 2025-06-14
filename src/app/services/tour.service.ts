@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, collectionGroup, CollectionReference, doc, Firestore, getDoc, getDocs, orderBy, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Application, Review, Tour } from '../models/tour';
+import { SearchCriteria } from '../models/search';
 import { combineLatest, firstValueFrom, Observable, of, switchMap } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { map } from 'rxjs/operators';
@@ -258,11 +259,144 @@ async cancelUserApplication(tourId: string, userId: string): Promise<void> {
   async getUserReviews(userId: string) {
     const reviewsQuery = query(
       // this will fail until the index is created for all reviews subcollections
-      collectionGroup(this.firestore, 'reviews'), 
+      collectionGroup(this.firestore, 'reviews'),
       where('userId', '==', userId)
     );
     const querySnapshot = await getDocs(reviewsQuery);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  // SEARCH AND FILTERING METHODS
+
+  /**
+   * Main search method that combines all filters
+   */
+  async searchTours(criteria: SearchCriteria): Promise<Tour[]> {
+    const allTours = await this.getAllTours();
+    let filteredTours = [...allTours];
+
+    // Apply text search
+    if (criteria.searchText && criteria.searchText.trim().length >= 2) {
+      filteredTours = this.filterToursByText(filteredTours, criteria.searchText);
+    }
+
+    // Apply difficulty filter
+    if (criteria.difficulty && criteria.difficulty !== 'all') {
+      filteredTours = this.filterToursByDifficulty(filteredTours, criteria.difficulty);
+    }
+
+    // Apply date range filter
+    if (criteria.dateFrom || criteria.dateTo) {
+      filteredTours = this.filterToursByDateRange(filteredTours, criteria.dateFrom, criteria.dateTo);
+    }
+
+    // Apply available spots filter
+    if (criteria.hasAvailableSpots) {
+      filteredTours = this.filterByAvailableSpots(filteredTours);
+    }
+
+    // Apply club name filter
+    if (criteria.clubName && criteria.clubName.trim()) {
+      filteredTours = this.filterToursByClubName(filteredTours, criteria.clubName);
+    }
+
+    // Apply sorting
+    if (criteria.sortBy) {
+      filteredTours = this.sortTours(filteredTours, criteria.sortBy, criteria.sortOrder || 'asc');
+    }
+
+    return filteredTours;
+  }
+
+  /**
+   * Filter tours by text search in name, description, and club name
+   */
+  private filterToursByText(tours: Tour[], searchText: string): Tour[] {
+    const query = searchText.toLowerCase().trim();
+    return tours.filter(tour =>
+      tour.name.toLowerCase().includes(query) ||
+      tour.description.toLowerCase().includes(query) ||
+      tour.clubName.toLowerCase().includes(query)
+    );
+  }
+
+  /**
+   * Filter tours by difficulty level
+   */
+  private filterToursByDifficulty(tours: Tour[], difficulty: string): Tour[] {
+    return tours.filter(tour => tour.difficulty === difficulty);
+  }
+
+  /**
+   * Filter tours by date range
+   */
+  private filterToursByDateRange(tours: Tour[], startDate?: Date, endDate?: Date): Tour[] {
+    return tours.filter(tour => {
+      const tourDate = new Date(tour.date);
+      const isAfterStart = !startDate || tourDate >= startDate;
+      const isBeforeEnd = !endDate || tourDate <= endDate;
+      return isAfterStart && isBeforeEnd;
+    });
+  }
+
+  /**
+   * Filter tours that have available spots
+   */
+  private filterByAvailableSpots(tours: Tour[]): Tour[] {
+    return tours.filter(tour =>
+      tour.maxParticipants - tour.participantsIds.length > 0
+    );
+  }
+
+  /**
+   * Filter tours by club name
+   */
+  private filterToursByClubName(tours: Tour[], clubName: string): Tour[] {
+    const query = clubName.toLowerCase().trim();
+    return tours.filter(tour =>
+      tour.clubName.toLowerCase().includes(query)
+    );
+  }
+
+  /**
+   * Sort tours by specified criteria
+   */
+  private sortTours(tours: Tour[], sortBy: string, order: string): Tour[] {
+    return tours.sort((a, b) => {
+      let aValue: any, bValue: any;
+      
+      switch (sortBy) {
+        case 'date':
+          aValue = new Date(a.date).getTime();
+          bValue = new Date(b.date).getTime();
+          break;
+        case 'difficulty':
+          const difficultyOrder = { 'easy': 1, 'moderate': 2, 'hard': 3 };
+          aValue = difficultyOrder[a.difficulty as keyof typeof difficultyOrder] || 0;
+          bValue = difficultyOrder[b.difficulty as keyof typeof difficultyOrder] || 0;
+          break;
+        case 'participants':
+          aValue = a.participantsIds.length;
+          bValue = b.participantsIds.length;
+          break;
+        case 'name':
+          aValue = a.name.toLowerCase();
+          bValue = b.name.toLowerCase();
+          break;
+        case 'clubName':
+          aValue = a.clubName.toLowerCase();
+          bValue = b.clubName.toLowerCase();
+          break;
+        default:
+          return 0;
+      }
+      
+      if (order === 'desc') {
+        return bValue > aValue ? 1 : bValue < aValue ? -1 : 0;
+      } else {
+        return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+      }
+    });
   }
   
 }

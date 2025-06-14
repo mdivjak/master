@@ -1,0 +1,162 @@
+<div class="search-filters-container">
+  <form [formGroup]="searchForm" class="space-y-4">
+    
+    <!-- Main Search Bar -->
+    <div class="flex flex-col sm:flex-row gap-4">
+      <!-- Search Input -->
+      <div class="flex-1">
+        <input
+          type="text"
+          formControlName="searchText"
+          placeholder="Search tours by name, description, or club..."
+          class="input-nature w-full px-4 py-3 text-base"
+        />
+      </div>
+
+      <!-- Quick Difficulty Filter -->
+      <div class="flex-shrink-0">
+        <div class="relative">
+          <select formControlName="difficulty" class="input-nature pr-10 py-3 text-base appearance-none cursor-pointer">
+            <option *ngFor="let option of difficultyOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <svg class="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Filters Toggle -->
+      <button
+        type="button"
+        (click)="toggleAdvancedFilters()"
+        class="btn-outline-nature flex items-center justify-center px-4 py-3"
+        [class.bg-forest-50]="showAdvancedFilters"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+        </svg>
+        Filters
+        <span *ngIf="getActiveFiltersCount() > 0" 
+              class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-forest-500 rounded-full">
+          {{ getActiveFiltersCount() }}
+        </span>
+      </button>
+    </div>
+
+    <!-- Advanced Filters Panel -->
+    <div *ngIf="showAdvancedFilters" 
+         class="card-nature p-6 bg-stone-50 border border-stone-200 rounded-xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Date From -->
+        <div>
+          <label for="dateFrom" class="block text-sm font-medium text-stone-700 mb-2">
+            From Date
+          </label>
+          <input
+            type="date"
+            id="dateFrom"
+            formControlName="dateFrom"
+            class="input-nature w-full"
+          />
+        </div>
+
+        <!-- Date To -->
+        <div>
+          <label for="dateTo" class="block text-sm font-medium text-stone-700 mb-2">
+            To Date
+          </label>
+          <input
+            type="date"
+            id="dateTo"
+            formControlName="dateTo"
+            class="input-nature w-full"
+          />
+        </div>
+
+        <!-- Club Name Filter -->
+        <div>
+          <label for="clubName" class="block text-sm font-medium text-stone-700 mb-2">
+            Club Name
+          </label>
+          <input
+            type="text"
+            id="clubName"
+            formControlName="clubName"
+            placeholder="Filter by club name..."
+            class="input-nature w-full"
+          />
+        </div>
+
+        <!-- Sort Options -->
+        <div>
+          <label for="sortBy" class="block text-sm font-medium text-stone-700 mb-2">
+            Sort By
+          </label>
+          <div class="flex gap-2">
+            <select formControlName="sortBy" class="input-nature flex-1 appearance-none cursor-pointer">
+              <option *ngFor="let option of sortOptions" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            <select formControlName="sortOrder" class="input-nature w-20 appearance-none cursor-pointer">
+              <option value="asc">↑</option>
+              <option value="desc">↓</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Filters -->
+      <div class="mt-4 pt-4 border-t border-stone-200">
+        <div class="flex flex-wrap items-center gap-4">
+          <!-- Available Spots Checkbox -->
+          <label class="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              formControlName="hasAvailableSpots"
+              class="w-4 h-4 text-forest-600 bg-stone-100 border-stone-300 rounded focus:ring-forest-500 focus:ring-2"
+            />
+            <span class="ml-2 text-sm text-stone-700">Only tours with available spots</span>
+          </label>
+
+          <!-- Clear Filters Button -->
+          <button
+            type="button"
+            (click)="onClearFilters()"
+            class="btn-outline-nature text-sm px-4 py-2 text-red-600 border-red-300 hover:bg-red-50"
+            *ngIf="getActiveFiltersCount() > 0"
+          >
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+            Clear All Filters
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Active Filters Display (when advanced panel is closed) -->
+    <div *ngIf="!showAdvancedFilters && filterState.isActive" class="flex flex-wrap gap-2">
+      <span *ngFor="let filter of filterState.activeFilters"
+            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-forest-100 text-forest-800 border border-forest-200">
+        {{ filter }}
+      </span>
+      <button
+        type="button"
+        (click)="onClearFilters()"
+        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50"
+      >
+        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        Clear
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,65 @@
+.search-filters-container {
+  @apply w-full;
+}
+
+/* Custom styles for form inputs to match the existing design system */
+.input-nature {
+  @apply block w-full px-3 py-2 border border-stone-300 rounded-lg text-stone-900 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-colors duration-200;
+}
+
+/* Button styles that match the existing design system */
+.btn-outline-nature {
+  @apply inline-flex items-center px-4 py-2 border border-stone-300 rounded-lg text-stone-700 bg-white hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all duration-200;
+}
+
+/* Card styles */
+.card-nature {
+  @apply bg-white shadow-sm;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .search-filters-container .grid {
+    @apply grid-cols-1 gap-3;
+  }
+  
+  .search-filters-container .flex-wrap {
+    @apply flex-col items-start gap-2;
+  }
+}
+
+/* Animation for advanced filters panel */
+.search-filters-container .card-nature {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Active filter chips styling */
+.search-filters-container .inline-flex {
+  @apply transition-all duration-200;
+}
+
+.search-filters-container .inline-flex:hover {
+  @apply transform scale-105;
+}
+
+/* Focus states for accessibility */
+.search-filters-container input:focus,
+.search-filters-container select:focus {
+  @apply ring-2 ring-forest-500 ring-opacity-50;
+}
+
+/* Loading state (if needed in the future) */
+.search-filters-container.loading {
+  @apply opacity-75 pointer-events-none;
+}
