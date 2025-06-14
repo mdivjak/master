@@ -144,4 +144,13 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
     
     return count;
   }
+
+  getSortDisplayText(): string {
+    const values = this.searchForm.value;
+    const sortByOption = this.sortOptions.find(option => option.value === values.sortBy);
+    const sortByLabel = sortByOption ? sortByOption.label : 'Date';
+    const sortOrderLabel = values.sortOrder === 'desc' ? 'Descending' : 'Ascending';
+    
+    return `${sortByLabel} (${sortOrderLabel})`;
+  }
 }

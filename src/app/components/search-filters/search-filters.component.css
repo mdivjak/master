@@ -63,3 +63,37 @@
 .search-filters-container.loading {
   @apply opacity-75 pointer-events-none;
 }
+
+/* Enhanced select styling for sort controls */
+.search-filters-container select {
+  @apply bg-white;
+}
+
+.search-filters-container select:focus {
+  @apply ring-2 ring-forest-500 ring-opacity-50 border-forest-500;
+}
+
+/* Custom dropdown arrow styling */
+.search-filters-container .relative select {
+  background-image: none;
+}
+
+/* Sort display text styling */
+.search-filters-container .text-xs {
+  @apply leading-relaxed;
+}
+
+/* Improved sort order select styling */
+.search-filters-container select[formControlName="sortOrder"] {
+  @apply font-medium text-center text-lg;
+}
+
+/* Make arrows more compact and centered */
+.search-filters-container select[formControlName="sortOrder"] option {
+  @apply text-center;
+}
+
+/* Enhanced visual feedback for sort controls */
+.search-filters-container .relative:hover .absolute svg {
+  @apply text-stone-600;
+}
