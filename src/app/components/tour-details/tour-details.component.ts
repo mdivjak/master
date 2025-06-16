@@ -23,6 +23,7 @@ export class TourDetailsComponent {
   reviews: Review[] = [];
   averageRating: number = 0;
   tourId!: string;
+  isSharing: boolean = false;
 
   constructor(
     private loggingService: LoggingService,
@@ -148,5 +149,59 @@ async cancelMyApplication() {
         this.averageRating = 0;
       }
     }
+  }
+
+  shareButtonClicked(): void {
+    const shareUrl = `${window.location.origin}/tour-details/${this.tourId}`;
+    this.copyToClipboard(shareUrl);
+  }
+
+  private async copyToClipboard(text: string): Promise<void> {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        // Modern Clipboard API
+        await navigator.clipboard.writeText(text);
+        this.handleCopySuccess();
+      } else {
+        // Fallback for older browsers
+        this.fallbackCopyToClipboard(text);
+      }
+    } catch (error) {
+      this.loggingService.error('TourDetailsComponent Failed to copy to clipboard:', error);
+    }
+  }
+
+  private fallbackCopyToClipboard(text: string): void {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        this.handleCopySuccess();
+      } else {
+        this.loggingService.error('TourDetailsComponent Fallback copy command failed');
+      }
+    } catch (error) {
+      this.loggingService.error('TourDetailsComponent Fallback copy failed:', error);
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  }
+
+  private handleCopySuccess(): void {
+    this.isSharing = true;
+    this.loggingService.debug('TourDetailsComponent URL copied to clipboard successfully');
+    
+    // Reset the sharing state after 2 seconds
+    setTimeout(() => {
+      this.isSharing = false;
+    }, 2000);
   }
 }
