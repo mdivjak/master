@@ -153,8 +153,6 @@ export class CreateHikingTourComponent {
     this.tour.clubName = currentUserData!.name;
     this.tour.clubPhoto = currentUserData!.photo;
 
-    this.tour.date = new Date().toISOString();
-
     // Upload tour
     const docRef = await this.tourService.createTour(this.tour);
     console.log('Tour created with ID:', docRef.id);
