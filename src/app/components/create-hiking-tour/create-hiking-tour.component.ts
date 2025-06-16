@@ -37,9 +37,12 @@ export class CreateHikingTourComponent {
 
   gpxFile: File | null = null;
   gpxData: string | null = null;
+  gpxFileName: string | null = null;
 
   photoFile: File | null = null;
   photoData: string | null = null;
+  photoFileName: string | null = null;
+  photoPreviewUrl: string | null = null;
 
   message = '';
 
@@ -52,6 +55,7 @@ export class CreateHikingTourComponent {
     const file = event.target.files[0];
     if (file) {
       this.gpxFile = file;
+      this.gpxFileName = file.name;
     }
   }
 
@@ -59,6 +63,14 @@ export class CreateHikingTourComponent {
     const file = event.target.files[0];
     if (file) {
       this.photoFile = file;
+      this.photoFileName = file.name;
+      
+      // Generate preview URL for the photo
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.photoPreviewUrl = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
     }
   }
 

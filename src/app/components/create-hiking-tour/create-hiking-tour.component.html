@@ -172,7 +172,9 @@
             <label for="gpxFile" class="block text-sm font-medium text-stone-700">
               GPX Route File *
             </label>
-            <div class="flex items-center justify-center w-full">
+            
+            <!-- Default Upload State -->
+            <div *ngIf="!gpxFileName" class="flex items-center justify-center w-full">
               <label for="gpxFile"
                      class="flex flex-col items-center justify-center w-full h-32 border-2 border-forest-300 border-dashed rounded-xl cursor-pointer bg-forest-50 hover:bg-forest-100 transition-colors duration-200">
                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -196,6 +198,45 @@
                 />
               </label>
             </div>
+
+            <!-- File Selected State -->
+            <div *ngIf="gpxFileName" class="w-full">
+              <!-- Success Indicator -->
+              <div class="flex items-center justify-center w-full h-32 border-2 border-green-300 bg-green-50 rounded-xl mb-3">
+                <div class="flex flex-col items-center justify-center">
+                  <div class="flex items-center mb-2">
+                    <svg class="w-8 h-8 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                    </svg>
+                  </div>
+                  <p class="text-sm font-semibold text-green-700 mb-1">File Selected Successfully</p>
+                  <p class="text-xs text-green-600 text-center">{{ gpxFileName }}</p>
+                </div>
+              </div>
+              
+              <!-- Replace File Option -->
+              <div class="flex justify-center">
+                <label for="gpxFileReplace"
+                       class="inline-flex items-center px-4 py-2 border border-forest-300 rounded-md shadow-sm text-sm font-medium text-forest-700 bg-white hover:bg-forest-50 cursor-pointer transition-colors duration-200">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                  </svg>
+                  Replace GPX File
+                  <input
+                    id="gpxFileReplace"
+                    type="file"
+                    accept=".gpx"
+                    (change)="onFileChange($event)"
+                    class="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+            
             <p class="text-sm text-stone-500">
               Upload the GPS track of your hiking route. This helps participants prepare and navigate.
             </p>
@@ -206,7 +247,9 @@
             <label for="photos" class="block text-sm font-medium text-stone-700">
               Tour Photos
             </label>
-            <div class="flex items-center justify-center w-full">
+            
+            <!-- Default Upload State -->
+            <div *ngIf="!photoFileName" class="flex items-center justify-center w-full">
               <label for="photos"
                      class="flex flex-col items-center justify-center w-full h-32 border-2 border-sunset-300 border-dashed rounded-xl cursor-pointer bg-sunset-50 hover:bg-sunset-100 transition-colors duration-200">
                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -229,6 +272,51 @@
                 />
               </label>
             </div>
+
+            <!-- Photo Selected State -->
+            <div *ngIf="photoFileName && photoPreviewUrl" class="w-full">
+              <!-- Photo Preview with Success Indicator -->
+              <div class="flex items-center justify-center w-full border-2 border-green-300 bg-green-50 rounded-xl p-4 mb-3">
+                <div class="flex flex-col items-center space-y-3">
+                  <!-- Thumbnail Preview -->
+                  <div class="relative">
+                    <img [src]="photoPreviewUrl"
+                         [alt]="photoFileName"
+                         class="w-24 h-24 object-cover rounded-lg shadow-md">
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  <!-- Success Message and Filename -->
+                  <div class="text-center">
+                    <p class="text-sm font-semibold text-green-700 mb-1">Photo Selected Successfully</p>
+                    <p class="text-xs text-green-600 break-all">{{ photoFileName }}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Replace Photo Option -->
+              <div class="flex justify-center">
+                <label for="photosReplace"
+                       class="inline-flex items-center px-4 py-2 border border-sunset-300 rounded-md shadow-sm text-sm font-medium text-sunset-700 bg-white hover:bg-sunset-50 cursor-pointer transition-colors duration-200">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                  </svg>
+                  Replace Photo
+                  <input
+                    id="photosReplace"
+                    type="file"
+                    (change)="onPhotosChange($event)"
+                    accept="image/*"
+                    class="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+            
             <p class="text-sm text-stone-500">
               Add photos that showcase the beauty and highlights of this hiking route
             </p>
