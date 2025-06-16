@@ -1,19 +1,23 @@
 ## Backlog
 
+- [ ] review user scenarios
+  - [ ] remove share and favorites
+  - [ ] check tour application process
+
 ### Left to do
 - [x] add notification to navbar
-- [ ] fix notification sending
-  - [ ] when user applies for a tour
-  - [ ] when application status changes
-- [ ] show past tours of hiker
-- [ ] add tour search on home page
-- [ ] save review when submitted
+- [x] fix notification sending
+  - [x] when user applies for a tour
+  - [x] when application status changes
+- [x] show past tours of hiker
+- [x] add tour search on home page
+- [x] save review when submitted
 
-- [ ] input validation throughout the app
+- [x] input validation throughout the app
 - [x] remove firestore dependency from home component
 - [x] remove firestore dependency from create tour component
-- [ ] remove firestore dependency from profile club component
-- [ ] hiking clubs should only have name - there is no first name last name
+- [x] remove firestore dependency from profile club component
+- [x] hiking clubs should only have name - there is no first name last name
 - [x] fixed - mark notification as read does not work
   
 ### Unregistered user
