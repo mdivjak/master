@@ -32,7 +32,7 @@
             <path *ngIf="tour.difficulty === 'hard'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
           </svg>
-          <span class="text-xs font-medium capitalize">{{ tour.difficulty }}</span>
+          <span class="text-xs font-medium capitalize">{{ tour.difficulty === 'easy' ? 'lako' : tour.difficulty === 'moderate' ? 'umereno' : tour.difficulty === 'hard' ? 'teško' : tour.difficulty }}</span>
         </span>
       </div>
       
@@ -44,7 +44,7 @@
                   d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
           </svg>
           <span class="text-sm font-medium text-stone-700">
-            {{ tour.maxParticipants - tour.participantsIds.length }} left
+            {{ tour.maxParticipants - tour.participantsIds.length }} ostalo
           </span>
         </div>
       </div>
@@ -73,7 +73,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
           </svg>
-          <span class="font-medium">{{ tour.maxParticipants }} max</span>
+          <span class="font-medium">{{ tour.maxParticipants }} maksimalno</span>
         </div>
       </div>
       
@@ -91,7 +91,7 @@
         </div>
         <div class="flex-grow min-w-0">
           <p class="text-sm font-medium text-stone-900 truncate">{{ tour.clubName }}</p>
-          <p class="text-xs text-stone-500">Tour Organizer</p>
+          <p class="text-xs text-stone-500">Organizator Ture</p>
         </div>
       </div>
       
@@ -104,7 +104,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
           </svg>
-          View Details
+          Pogledaj Detalje
         </button>
         <button class="btn-outline-nature text-sm py-2 px-4"
                 [class.opacity-50]="tour.maxParticipants - tour.participantsIds.length === 0"
@@ -113,7 +113,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
           </svg>
-          Join
+          Pridruži se
         </button>
       </div>
     </div>

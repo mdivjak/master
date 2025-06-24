@@ -24,9 +24,9 @@
         </div>
         <div>
           <a routerLink="/" class="text-white font-heading font-bold text-xl tracking-wide hover:text-white/90 transition-colors duration-200">
-            Adventure Trails
+            Planinske Staze
           </a>
-          <div class="text-white/70 text-xs font-accent hidden sm:block">Discover Nature's Best</div>
+          <div class="text-white/70 text-xs font-accent hidden sm:block">Otkrijte najbolje prirode</div>
         </div>
       </div>
 
@@ -44,13 +44,13 @@
                 <div class="w-8 h-8 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
                   {{ (user.displayName || user.email || 'U').charAt(0).toUpperCase() }}
                 </div>
-                <span class="font-medium">Profile</span>
+                <span class="font-medium">Profil</span>
               </button>
             </div>
 
             <button (click)="logout()"
                     class="text-white hover:text-white/90 transition-colors duration-200 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-subtle hover:bg-white/20 font-medium">
-              Logout
+                   Odjava
             </button>
           </ng-container>
 
@@ -58,11 +58,11 @@
           <ng-template #loggedOut>
             <a routerLink="/login"
                class="text-white hover:text-white/90 transition-colors duration-200 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-subtle hover:bg-white/20 font-medium">
-              Login
+              Prijava
             </a>
             <a routerLink="/register"
                class="bg-sunset-500 hover:bg-sunset-600 text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 shadow-warm hover:shadow-lg transform hover:-translate-y-0.5">
-              Sign Up
+              Registracija
             </a>
           </ng-template>
         </div>
@@ -89,22 +89,22 @@
             <div class="w-8 h-8 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
               {{ (user.displayName || user.email || 'U').charAt(0).toUpperCase() }}
             </div>
-            <span>Profile</span>
+            <span>Profil</span>
           </button>
           <button (click)="logout()"
                   class="text-white hover:text-white/90 hover:bg-white/10 block px-3 py-2 rounded-lg text-base font-medium w-full text-left transition-colors duration-200">
-            Logout
+           Odjava
           </button>
         </ng-container>
 
         <ng-template #mobileLoggedOut>
           <a routerLink="/login"
              class="text-white hover:text-white/90 hover:bg-white/10 block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
-            Login
+            Prijava
           </a>
           <a routerLink="/register"
              class="bg-sunset-500 hover:bg-sunset-600 text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
-            Sign Up
+            Registracija
           </a>
         </ng-template>
       </div>

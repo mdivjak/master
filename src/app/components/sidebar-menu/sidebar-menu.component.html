@@ -1,8 +1,8 @@
 <div class="space-y-6">
   <!-- Menu Header -->
   <div class="border-b border-stone-200 pb-4">
-    <h2 class="text-xl font-heading font-bold text-stone-900 mb-2">Quick Actions</h2>
-    <p class="text-sm text-stone-600">Manage your hiking activities</p>
+    <h2 class="text-xl font-heading font-bold text-stone-900 mb-2">Brze Akcije</h2>
+    <p class="text-sm text-stone-600">Upravljajte svojim planinskim aktivnostima</p>
   </div>
 
   <!-- Hiking Club Menu -->
@@ -16,9 +16,9 @@
       </div>
       <div class="flex-1">
         <h3 class="font-medium text-stone-900 group-hover:text-forest-700 transition-colors duration-200">
-          Create Hiking Tour
+          Kreiraj Planinsku Turu
         </h3>
-        <p class="text-sm text-stone-600">Plan a new adventure</p>
+        <p class="text-sm text-stone-600">Planiraj novu avanturu</p>
       </div>
       <svg class="w-5 h-5 text-stone-400 group-hover:text-forest-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -34,9 +34,9 @@
       </div>
       <div class="flex-1">
         <h3 class="font-medium text-stone-900 group-hover:text-mountain-700 transition-colors duration-200">
-          Manage Tours
+          Upravljaj Turama
         </h3>
-        <p class="text-sm text-stone-600">View your profile & tours</p>
+        <p class="text-sm text-stone-600">Pogledaj svoj profil i ture</p>
       </div>
       <svg class="w-5 h-5 text-stone-400 group-hover:text-mountain-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -55,9 +55,9 @@
       </div>
       <div class="flex-1">
         <h3 class="font-medium text-stone-900 group-hover:text-forest-700 transition-colors duration-200">
-          My Tours
+          Moje Ture
         </h3>
-        <p class="text-sm text-stone-600">View your adventures</p>
+        <p class="text-sm text-stone-600">Pogledaj svoje avanture</p>
       </div>
       <svg class="w-5 h-5 text-stone-400 group-hover:text-forest-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -74,9 +74,9 @@
       </div>
       <div class="flex-1">
         <h3 class="font-medium text-stone-900 group-hover:text-sunset-700 transition-colors duration-200">
-          Favorites
+          Omiljeni
         </h3>
-        <p class="text-sm text-stone-600">Saved tours & trails</p>
+        <p class="text-sm text-stone-600">Sačuvane ture i staze</p>
       </div>
       <svg class="w-5 h-5 text-stone-400 group-hover:text-sunset-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -86,15 +86,15 @@
 
   <!-- Stats Section -->
   <div class="border-t border-stone-200 pt-6">
-    <h3 class="text-sm font-medium text-stone-900 mb-3">Your Stats</h3>
+    <h3 class="text-sm font-medium text-stone-900 mb-3">Vaše Statistike</h3>
     <div class="grid grid-cols-2 gap-3">
       <div class="text-center p-3 bg-forest-50 rounded-lg">
         <div class="text-lg font-bold text-forest-600">{{ userType === 'hiker' ? '5' : '12' }}</div>
-        <div class="text-xs text-stone-600">{{ userType === 'hiker' ? 'Tours Joined' : 'Tours Created' }}</div>
+        <div class="text-xs text-stone-600">{{ userType === 'hiker' ? 'Pridružene Ture' : 'Kreirane Ture' }}</div>
       </div>
       <div class="text-center p-3 bg-mountain-50 rounded-lg">
         <div class="text-lg font-bold text-mountain-600">{{ userType === 'hiker' ? '127' : '89' }}</div>
-        <div class="text-xs text-stone-600">{{ userType === 'hiker' ? 'Miles Hiked' : 'Happy Hikers' }}</div>
+        <div class="text-xs text-stone-600">{{ userType === 'hiker' ? 'Pređeni Kilometri' : 'Zadovoljni Planinari' }}</div>
       </div>
     </div>
   </div>

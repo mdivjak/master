@@ -31,15 +31,15 @@
                   d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
           </svg>
         </div>
-        <h2 class="text-3xl font-heading font-bold text-stone-900 mb-2">Join Adventure Trails</h2>
-        <p class="text-stone-600">Create your account and start exploring</p>
+        <h2 class="text-3xl font-heading font-bold text-stone-900 mb-2">Pridružite se Planinskim Stazama</h2>
+        <p class="text-stone-600">Kreirajte svoj nalog i počnite da istražujete</p>
       </div>
 
       <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)" class="space-y-6">
         <!-- Profile Photo Field -->
         <div class="space-y-2">
           <label for="profilePhoto" class="block text-sm font-medium text-stone-700">
-            Profile Photo
+            Profilna Slika
           </label>
           <div class="relative">
             <div class="flex items-center justify-center w-full">
@@ -51,9 +51,9 @@
                           d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                   </svg>
                   <p class="mb-2 text-sm text-stone-500">
-                    <span class="font-semibold">Click to upload</span> your photo
+                    <span class="font-semibold">Kliknite za otpremanje</span> vaše slike
                   </p>
-                  <p class="text-xs text-stone-500">PNG, JPG or JPEG</p>
+                  <p class="text-xs text-stone-500">PNG, JPG ili JPEG</p>
                 </div>
                 <input id="profilePhoto" type="file" accept=".jpg,.jpeg,.png" (change)="onFileChange($event)" class="hidden" required />
               </label>
@@ -64,7 +64,7 @@
         <!-- Email Field -->
         <div class="space-y-2">
           <label for="email" class="block text-sm font-medium text-stone-700">
-            Email Address
+            Email Adresa
           </label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -78,7 +78,7 @@
               id="email"
               [(ngModel)]="email"
               name="email"
-              placeholder="Enter your email"
+              placeholder="Unesite svoj email"
               class="input-nature pl-10"
               required
               #emailInput="ngModel"
@@ -90,14 +90,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span>Please enter a valid email address</span>
+            <span>Molimo unesite važeću email adresu</span>
           </div>
         </div>
       
         <!-- Name Field -->
         <div class="space-y-2">
           <label for="name" class="block text-sm font-medium text-stone-700">
-            Full Name
+            Puno Ime
           </label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -111,7 +111,7 @@
               id="name"
               [(ngModel)]="name"
               name="name"
-              placeholder="Enter your full name"
+              placeholder="Unesite svoje puno ime"
               class="input-nature pl-10"
               required
               #nameInput="ngModel"
@@ -123,14 +123,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span>Full name is required</span>
+            <span>Puno ime je obavezno</span>
           </div>
         </div>
 
         <!-- User Type Field -->
         <div class="space-y-2">
           <label for="userType" class="block text-sm font-medium text-stone-700">
-            I want to join as a
+            Želim da se pridružim kao
           </label>
           <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
@@ -145,8 +145,8 @@
                   </svg>
                 </div>
                 <div>
-                  <div class="font-medium text-stone-900">Hiker</div>
-                  <div class="text-sm text-stone-600">Join exciting tours</div>
+                  <div class="font-medium text-stone-900">Planinac</div>
+                  <div class="text-sm text-stone-600">Pridružite se uzbudljivim turama</div>
                 </div>
               </label>
             </div>
@@ -163,8 +163,8 @@
                   </svg>
                 </div>
                 <div>
-                  <div class="font-medium text-stone-900">Hiking Club</div>
-                  <div class="text-sm text-stone-600">Organize adventures</div>
+                  <div class="font-medium text-stone-900">Planinarski Klub</div>
+                  <div class="text-sm text-stone-600">Organizuj avanture</div>
                 </div>
               </label>
             </div>
@@ -175,14 +175,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span>Please select your account type</span>
+            <span>Molimo izaberite tip vašeg naloga</span>
           </div>
         </div>
       
         <!-- Password Field -->
         <div class="space-y-2">
           <label for="password" class="block text-sm font-medium text-stone-700">
-            Password
+            Lozinka
           </label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -196,7 +196,7 @@
               id="password"
               [(ngModel)]="password"
               name="password"
-              placeholder="Create a strong password"
+              placeholder="Kreirajte jaku lozinku"
               class="input-nature pl-10"
               required
               #passwordInput="ngModel"
@@ -208,14 +208,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span>Password is required</span>
+            <span>Lozinka je obavezna</span>
           </div>
         </div>
       
         <!-- Confirm Password Field -->
         <div class="space-y-2">
           <label for="confirmPassword" class="block text-sm font-medium text-stone-700">
-            Confirm Password
+            Potvrdite Lozinku
           </label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -229,7 +229,7 @@
               id="confirmPassword"
               [(ngModel)]="confirmPassword"
               name="confirmPassword"
-              placeholder="Confirm your password"
+              placeholder="Potvrdite svoju lozinku"
               class="input-nature pl-10"
               required
               #confirmPasswordInput="ngModel"
@@ -241,7 +241,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span>Please confirm your password</span>
+            <span>Molimo potvrdite svoju lozinku</span>
           </div>
           <div *ngIf="password !== confirmPassword && confirmPasswordInput.touched"
                class="text-red-600 text-sm flex items-center space-x-1 animate-slide-up">
@@ -249,7 +249,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span>Passwords do not match</span>
+            <span>Lozinke se ne poklapaju</span>
           </div>
         </div>
       
@@ -263,7 +263,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
           </svg>
-          Start Your Adventure
+          Počnite Svoju Avanturu
         </button>
       </form>
       
@@ -271,7 +271,7 @@
       <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-stone-900/50 backdrop-blur-sm z-50">
         <div class="card-nature p-8 text-center">
           <div class="w-16 h-16 mx-auto mb-4 border-4 border-forest-200 border-t-forest-600 rounded-full animate-spin"></div>
-          <p class="text-stone-700 font-medium">Creating your account...</p>
+          <p class="text-stone-700 font-medium">Kreiram vaš nalog...</p>
         </div>
       </div>
       
@@ -281,7 +281,7 @@
           <div class="w-full border-t border-stone-200"></div>
         </div>
         <div class="relative flex justify-center text-sm">
-          <span class="px-4 bg-white text-stone-500">Already have an account?</span>
+          <span class="px-4 bg-white text-stone-500">Već imate nalog?</span>
         </div>
       </div>
       
@@ -293,7 +293,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
           </svg>
-          Sign In Instead
+          Prijavite se Umesto Toga
         </a>
       </div>
     </div>
